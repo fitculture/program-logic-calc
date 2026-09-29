@@ -1,602 +1,636 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-  <meta name="googlebot" content="noindex, nofollow">
-  <title>Fit Culture Logic Engine</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="googlebot" content="noindex, nofollow">
+<title>Fit Culture Logic Engine</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    body {
-      margin: 0;
-      background: #f3f4f6;
-      padding: 32px 16px 64px;
-    }
+  .fc-calc-wrapper {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    max-width: 650px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06), 0 2px 12px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    color: #000000;
+    font-size: 16px;
+    line-height: 1.5;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
 
-    .fc-calc-wrapper {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      max-width: 650px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 24px;
-      box-shadow: 0 16px 64px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      color: #000000;
-      font-size: 18px;
-      line-height: 1.5;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-    }
-    .fc-calc-header {
-      background: #ffffff;
-      padding: 32px 24px 20px;
-      text-align: center;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    }
-    .fc-calc-header h3 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: #000000;
-    }
-    .fc-calc-body {
-      padding: 32px 24px;
-    }
-    .fc-screen-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: #000000;
-      margin-top: 40px;
-      margin-bottom: 8px;
-      letter-spacing: -0.3px;
-    }
-    .fc-screen-title:first-child {
-      margin-top: 0;
-    }
-    .fc-help-text {
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.5);
-      font-weight: 400;
-      margin-top: 0;
-      margin-bottom: 20px;
-      display: block;
-    }
-    .fc-group {
-      margin-bottom: 28px;
-    }
-    .fc-group label.fc-label-title {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 12px;
-      font-size: 17px;
-      color: #000000;
-    }
+  .fc-calc-header {
+    background: #ffffff;
+    padding: 32px 24px 24px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
 
-    /* STACKED RADIO SELECTORS */
-    .fc-radio-stacked input[type="radio"] {
-      display: none;
-    }
-    .fc-radio-stacked {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .fc-radio-stacked label {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 24px;
-      border: 1.5px solid rgba(0, 0, 0, 0.12);
-      border-radius: 16px;
-      font-weight: 600;
-      font-size: 17px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      background: #ffffff;
-      color: #000000;
-    }
-    .fc-radio-stacked label::after {
-      content: '';
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 2px solid rgba(0, 0, 0, 0.2);
-      transition: all 0.2s ease;
-    }
-    .fc-radio-stacked input[type="radio"]:checked + label {
-      border-color: #000000;
-      background: #ffffff;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-    }
-    .fc-radio-stacked input[type="radio"]:checked + label::after {
-      border-color: #54d5f5;
-      background: #54d5f5;
-      box-shadow: inset 0 0 0 4px #ffffff;
-    }
+  .fc-calc-header h3 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #000000;
+  }
 
-    /* SIDE-BY-SIDE SEGMENTED TOGGLES */
-    .fc-toggle-group input[type="radio"] {
-      display: none;
-    }
-    .fc-toggle-segmented {
-      display: flex;
-      background: rgba(0, 0, 0, 0.05);
-      border-radius: 14px;
-      padding: 4px;
-      gap: 4px;
-    }
-    .fc-toggle-segmented label {
-      flex: 1;
-      padding: 12px;
-      border-radius: 10px;
-      text-align: center;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      color: rgba(0, 0, 0, 0.5);
-    }
-    .fc-toggle-segmented input[type="radio"]:checked + label {
-      background: #ffffff;
-      color: #000000;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
+  .fc-calc-body {
+    padding: 32px 24px;
+  }
 
-    /* INPUTS FOR METRICS */
-    .fc-input-group {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-    .fc-input-group > div {
-      flex: 1;
-    }
-    .fc-input-group input {
-      width: 100%;
-      padding: 16px;
-      border: 1.5px solid rgba(0, 0, 0, 0.12);
-      border-radius: 14px;
-      font-size: 18px;
-      font-family: 'Inter', sans-serif;
-      font-weight: 500;
-      background: #ffffff;
-      color: #000000;
-      box-sizing: border-box;
-      transition: all 0.2s ease;
-    }
-    .fc-input-group input:focus {
-      outline: none;
-      border-color: #54d5f5;
-      box-shadow: 0 0 0 4px rgba(84, 213, 245, 0.25);
-    }
+  .fc-screen-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+    margin-top: 40px;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+  
+  .fc-screen-title:first-child {
+    margin-top: 0;
+  }
 
-    /* BUTTON */
-    .fc-btn {
-      width: 100%;
-      background: #000000;
-      color: #ffffff;
-      border: none;
-      padding: 18px;
-      font-size: 18px;
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      border-radius: 16px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin-top: 32px;
-      letter-spacing: 0.3px;
-    }
-    .fc-btn:hover {
-      background: #54d5f5;
-      color: #000000;
-    }
+  .fc-help-text {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 400;
+    margin-top: 0;
+    margin-bottom: 24px;
+    display: block;
+  }
 
-    /* RESULTS CARD */
-    .fc-result-box {
-      margin-top: 40px;
-      padding: 32px;
-      border-radius: 20px;
-      background: #ffffff;
-      border: 2px solid #54d5f5;
-      box-shadow: 0 12px 40px rgba(84, 213, 245, 0.18);
-      display: none;
-    }
-    .fc-result-box h4 {
-      margin: 0 0 20px 0;
-      color: #000000;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-      padding-bottom: 12px;
-    }
-    .fc-result-item {
-      margin: 16px 0;
-      font-size: 16px;
-      font-weight: 400;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-      padding-bottom: 12px;
-      color: rgba(0, 0, 0, 0.7);
-    }
-    .fc-result-item strong {
-      color: #000000;
-      font-weight: 600;
-      text-align: right;
-      max-width: 60%;
-    }
+  .fc-group {
+    margin-bottom: 28px;
+  }
 
-    /* REALISM BADGES */
-    .fc-badge {
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 600;
-      display: inline-block;
-    }
-    .fc-badge-green {
-      background: #e6f4ea;
-      color: #137333;
-      border: 1px solid #ceead6;
-    }
-    .fc-badge-yellow {
-      background: #fef7e0;
-      color: #b06000;
-      border: 1px solid #feefc3;
-    }
+  .fc-group label.fc-label-title {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #000000;
+  }
 
-    /* EXPLANATION CALLOUT BOX */
-    .fc-explanation-box {
-      margin-top: 20px;
-      padding: 18px 20px;
-      background: #fffbf0;
-      border-left: 4px solid #54d5f5;
-      border-radius: 12px;
-      font-size: 14px;
-      color: #2c2000;
-      line-height: 1.6;
-    }
-    .fc-explanation-box strong {
-      color: #000000;
-      display: block;
-      margin-bottom: 6px;
-      font-size: 15px;
-    }
+  /* STACKED RADIO SELECTORS */
+  .fc-radio-stacked input[type="radio"] {
+    display: none;
+  }
+  .fc-radio-stacked {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .fc-radio-stacked label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #ffffff;
+    color: #000000;
+  }
+  .fc-radio-stacked label::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+  .fc-radio-stacked input[type="radio"]:checked + label {
+    border-color: #000000;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  .fc-radio-stacked input[type="radio"]:checked + label::after {
+    border-color: #54d5f5;
+    background: #54d5f5;
+    box-shadow: inset 0 0 0 4px #ffffff;
+  }
 
-    .fc-modifier-tag {
-      display: inline-block;
-      padding: 8px 14px;
-      background: rgba(84, 213, 245, 0.15);
-      color: #000000;
-      font-size: 14px;
-      border-radius: 10px;
-      margin-right: 8px;
-      margin-top: 8px;
-      font-weight: 500;
-    }
-  </style>
+  /* SIDE-BY-SIDE SEGMENTED TOGGLES */
+  .fc-toggle-group input[type="radio"] {
+    display: none;
+  }
+  .fc-toggle-segmented {
+    display: flex;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 14px;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+  }
+  .fc-toggle-segmented label {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    color: rgba(0, 0, 0, 0.5);
+  }
+  .fc-toggle-segmented input[type="radio"]:checked + label {
+    background: #ffffff;
+    color: #000000;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+
+  /* INPUTS FOR METRICS */
+  .fc-input-group {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .fc-input-group > div {
+    flex: 1;
+  }
+  .fc-input-group input {
+    width: 100%;
+    padding: 16px;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    background: #ffffff;
+    color: #000000;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+  .fc-input-group input:focus {
+    outline: none;
+    border-color: #54d5f5;
+    box-shadow: 0 0 0 4px rgba(84, 213, 245, 0.2);
+  }
+
+  /* BUTTON */
+  .fc-btn {
+    width: 100%;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    padding: 18px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 24px;
+    letter-spacing: 0.3px;
+  }
+  .fc-btn:hover {
+    background: #54d5f5;
+    color: #000000;
+  }
+
+  /* RESULTS CARD */
+  .fc-result-box {
+    margin-top: 40px;
+    padding: 32px;
+    border-radius: 20px;
+    background: #ffffff;
+    border: 2px solid #54d5f5;
+    box-shadow: 0 16px 48px rgba(84, 213, 245, 0.15);
+    display: none;
+  }
+  .fc-result-box h4 {
+    margin: 0 0 20px 0;
+    color: #000000;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    padding-bottom: 12px;
+  }
+  .fc-result-item {
+    margin: 16px 0;
+    font-size: 15px;
+    font-weight: 400;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    padding-bottom: 12px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+  .fc-result-item strong {
+    color: #000000;
+    font-weight: 600;
+    text-align: right;
+    max-width: 60%;
+  }
+
+  /* REALISM BADGES */
+  .fc-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+  }
+  .fc-badge-green {
+    background: #e6f4ea;
+    color: #137333;
+    border: 1px solid rgba(19, 115, 51, 0.2);
+  }
+  .fc-badge-yellow {
+    background: #fff8e6;
+    color: #9e6400;
+    border: 1px solid rgba(158, 100, 0, 0.2);
+  }
+
+  /* EXPLANATION CALLOUT BOX */
+  .fc-explanation-box {
+    margin-top: 24px;
+    padding: 20px;
+    background: rgba(84, 213, 245, 0.05);
+    border-left: 4px solid #54d5f5;
+    border-radius: 12px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.8);
+    line-height: 1.6;
+  }
+  .fc-explanation-box strong {
+    color: #000000;
+    display: block;
+    margin-bottom: 6px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .fc-modifier-tag {
+    display: inline-block;
+    padding: 8px 14px;
+    background: rgba(0, 0, 0, 0.04);
+    color: #000000;
+    font-size: 13px;
+    border-radius: 10px;
+    margin-right: 8px;
+    margin-top: 8px;
+    font-weight: 500;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+</style>
 </head>
 <body>
-  <div class="fc-calc-wrapper">
-    <div class="fc-calc-header">
-      <h3>Fit Culture Logic Engine</h3>
+
+<div class="fc-calc-wrapper">
+  <div class="fc-calc-header">
+    <h3>Fit Culture Logic Engine</h3>
+  </div>
+  
+  <div class="fc-calc-body">
+    
+    <!-- SCREEN 1: GOALS -->
+    <div class="fc-screen-title">1. Tell Us About Your Goals</div>
+    <div class="fc-group">
+      <label class="fc-label-title">Choose a primary goal:</label>
+      <div class="fc-radio-stacked">
+        <input type="radio" id="goal-lose" name="goal" value="lose" checked>
+        <label for="goal-lose">I want to lose weight</label>
+        
+        <input type="radio" id="goal-maintain" name="goal" value="maintain">
+        <label for="goal-maintain">I want to maintain my weight</label>
+        
+        <input type="radio" id="goal-gain" name="goal" value="gain">
+        <label for="goal-gain">I want to gain weight</label>
+      </div>
+    </div>
+    
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Do you also want to gain muscle?</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="muscle-no" name="muscle" value="no" checked>
+        <label for="muscle-no">No</label>
+        <input type="radio" id="muscle-yes" name="muscle" value="yes">
+        <label for="muscle-yes">Yes</label>
+      </div>
     </div>
 
-    <div class="fc-calc-body">
-
-      <!-- SCREEN 1: GOALS -->
-      <div class="fc-screen-title">1. Tell Us About Your Goals</div>
-      <div class="fc-group">
-        <label class="fc-label-title">Choose a primary goal:</label>
-        <div class="fc-radio-stacked">
-          <input type="radio" id="goal-lose" name="goal" value="lose" checked>
-          <label for="goal-lose">I want to lose weight</label>
-
-          <input type="radio" id="goal-maintain" name="goal" value="maintain">
-          <label for="goal-maintain">I want to maintain my weight</label>
-
-          <input type="radio" id="goal-gain" name="goal" value="gain">
-          <label for="goal-gain">I want to gain weight</label>
-        </div>
+    <!-- SCREEN 2: GENERAL HEALTH -->
+    <div class="fc-screen-title">2. Tell Us About Your Health</div>
+    <span class="fc-help-text">Saved to profile. Does not change primary program track.</span>
+    
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Are you diabetic?</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="diabetic-t1" name="diabetic" value="t1">
+        <label for="diabetic-t1">Type 1</label>
+        <input type="radio" id="diabetic-t2" name="diabetic" value="t2">
+        <label for="diabetic-t2">Type 2</label>
+        <input type="radio" id="diabetic-no" name="diabetic" value="no" checked>
+        <label for="diabetic-no">No</label>
       </div>
+    </div>
 
-      <div class="fc-group fc-toggle-group">
-        <label class="fc-label-title">Do you also want to gain muscle?</label>
-        <div class="fc-toggle-segmented">
-          <input type="radio" id="muscle-no" name="muscle" value="no" checked>
-          <label for="muscle-no">NO</label>
-          <input type="radio" id="muscle-yes" name="muscle" value="yes">
-          <label for="muscle-yes">YES</label>
-        </div>
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Do you have high cholesterol?</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="cholesterol-no" name="cholesterol" value="no" checked>
+        <label for="cholesterol-no">No</label>
+        <input type="radio" id="cholesterol-yes" name="cholesterol" value="yes">
+        <label for="cholesterol-yes">Yes</label>
       </div>
+    </div>
 
-      <!-- SCREEN 2: GENERAL HEALTH -->
-      <div class="fc-screen-title">2. Tell Us About Your Health</div>
-      <span class="fc-help-text">Saved to profile. Does not change primary program track.</span>
-
-      <div class="fc-group fc-toggle-group">
-        <label class="fc-label-title">Are you diabetic?</label>
-        <div class="fc-toggle-segmented">
-          <input type="radio" id="diabetic-t1" name="diabetic" value="t1">
-          <label for="diabetic-t1">TYPE 1</label>
-          <input type="radio" id="diabetic-t2" name="diabetic" value="t2">
-          <label for="diabetic-t2">TYPE 2</label>
-          <input type="radio" id="diabetic-no" name="diabetic" value="no" checked>
-          <label for="diabetic-no">NO</label>
-        </div>
+    <!-- SCREEN 3: SPECIFIC CONDITIONS -->
+    <div class="fc-screen-title">3. Have You Ever Been Told You Have Any Of These?</div>
+    
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Hashimoto’s / Thyroid / PCOS</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="hashimotos-no" name="hashimotos" value="no" checked>
+        <label for="hashimotos-no">No</label>
+        <input type="radio" id="hashimotos-yes" name="hashimotos" value="yes">
+        <label for="hashimotos-yes">Yes</label>
       </div>
+    </div>
 
-      <div class="fc-group fc-toggle-group">
-        <label class="fc-label-title">Do you have high cholesterol?</label>
-        <div class="fc-toggle-segmented">
-          <input type="radio" id="cholesterol-no" name="cholesterol" value="no" checked>
-          <label for="cholesterol-no">NO</label>
-          <input type="radio" id="cholesterol-yes" name="cholesterol" value="yes">
-          <label for="cholesterol-yes">YES</label>
-        </div>
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Insulin Resistance / Type 2 Diabetes</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="insulin-no" name="insulin" value="no" checked>
+        <label for="insulin-no">No</label>
+        <input type="radio" id="insulin-yes" name="insulin" value="yes">
+        <label for="insulin-yes">Yes</label>
       </div>
+    </div>
 
-      <!-- SCREEN 3: SPECIFIC CONDITIONS -->
-      <div class="fc-screen-title">3. Have You Ever Been Told You Have Any Of These?</div>
-
-      <div class="fc-group fc-toggle-group">
-        <label class="fc-label-title">Hashimoto’s / Thyroid / PCOS</label>
-        <div class="fc-toggle-segmented">
-          <input type="radio" id="hashimotos-no" name="hashimotos" value="no" checked>
-          <label for="hashimotos-no">NO</label>
-          <input type="radio" id="hashimotos-yes" name="hashimotos" value="yes">
-          <label for="hashimotos-yes">YES</label>
-        </div>
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Perimenopause / Menopause</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="menopause-no" name="menopause" value="no" checked>
+        <label for="menopause-no">No</label>
+        <input type="radio" id="menopause-yes" name="menopause" value="yes">
+        <label for="menopause-yes">Yes</label>
       </div>
+    </div>
 
-      <div class="fc-group fc-toggle-group">
-        <label class="fc-label-title">Insulin Resistance / Type 2 Diabetes</label>
-        <div class="fc-toggle-segmented">
-          <input type="radio" id="insulin-no" name="insulin" value="no" checked>
-          <label for="insulin-no">NO</label>
-          <input type="radio" id="insulin-yes" name="insulin" value="yes">
-          <label for="insulin-yes">YES</label>
-        </div>
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Low testosterone</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="lowt-no" name="lowt" value="no" checked>
+        <label for="lowt-no">No</label>
+        <input type="radio" id="lowt-yes" name="lowt" value="yes">
+        <label for="lowt-yes">Yes</label>
       </div>
+    </div>
 
-      <div class="fc-group fc-toggle-group">
-        <label class="fc-label-title">Perimenopause / Menopause</label>
-        <div class="fc-toggle-segmented">
-          <input type="radio" id="menopause-no" name="menopause" value="no" checked>
-          <label for="menopause-no">NO</label>
-          <input type="radio" id="menopause-yes" name="menopause" value="yes">
-          <label for="menopause-yes">YES</label>
-        </div>
+    <!-- SCREEN 4: GLP-1 -->
+    <div class="fc-screen-title">4. GLP-1 Medication</div>
+    <div class="fc-group">
+      <label class="fc-label-title">Are you currently using a GLP-1 Medication?</label>
+      <div class="fc-radio-stacked">
+        <input type="radio" id="glp1-yes" name="glp1" value="yes">
+        <label for="glp1-yes">Yes</label>
+        <input type="radio" id="glp1-no" name="glp1" value="no" checked>
+        <label for="glp1-no">No</label>
+        <input type="radio" id="glp1-past" name="glp1" value="past">
+        <label for="glp1-past">Past Use</label>
       </div>
+    </div>
 
-      <div class="fc-group fc-toggle-group">
-        <label class="fc-label-title">Low testosterone</label>
-        <div class="fc-toggle-segmented">
-          <input type="radio" id="lowt-no" name="lowt" value="no" checked>
-          <label for="lowt-no">NO</label>
-          <input type="radio" id="lowt-yes" name="lowt" value="yes">
-          <label for="lowt-yes">YES</label>
-        </div>
+    <!-- SCREEN 5: NEEDS -->
+    <div class="fc-screen-title">5. Tell Us About Your Needs</div>
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Do you have more than 1 hour per day to commit?</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="time-no" name="time" value="no" checked>
+        <label for="time-no">No</label>
+        <input type="radio" id="time-yes" name="time" value="yes">
+        <label for="time-yes">Yes</label>
       </div>
+    </div>
 
-      <!-- SCREEN 4: GLP-1 -->
-      <div class="fc-screen-title">4. GLP-1 Medication</div>
-      <div class="fc-group">
-        <label class="fc-label-title">Are you currently using a GLP-1 Medication?</label>
-        <div class="fc-radio-stacked">
-          <input type="radio" id="glp1-yes" name="glp1" value="yes">
-          <label for="glp1-yes">YES</label>
-          <input type="radio" id="glp1-no" name="glp1" value="no" checked>
-          <label for="glp1-no">NO</label>
-          <input type="radio" id="glp1-past" name="glp1" value="past">
-          <label for="glp1-past">PAST USE</label>
-        </div>
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Are you an athlete interested in the specialized program?</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="athlete-no" name="athlete" value="no" checked>
+        <label for="athlete-no">No</label>
+        <input type="radio" id="athlete-yes" name="athlete" value="yes">
+        <label for="athlete-yes">Yes</label>
       </div>
+    </div>
 
-      <!-- SCREEN 5: NEEDS -->
-      <div class="fc-screen-title">5. Tell Us About Your Needs</div>
-      <div class="fc-group fc-toggle-group">
-        <label class="fc-label-title">Do you have more than 1 hour per day to commit?</label>
-        <div class="fc-toggle-segmented">
-          <input type="radio" id="time-no" name="time" value="no" checked>
-          <label for="time-no">NO</label>
-          <input type="radio" id="time-yes" name="time" value="yes">
-          <label for="time-yes">YES</label>
-        </div>
-      </div>
+    <!-- SCREEN 6: METRICS -->
+    <div class="fc-screen-title">6. Let's Set Your Goals!</div>
+    <span class="fc-help-text">Used to establish precise meal plans, macros, and daily calorie targets.</span>
+    
+    <div class="fc-input-group">
+      <div><label class="fc-label-title">Current Wt (lbs)</label><input type="number" id="inp-current" placeholder="180" value="180"></div>
+      <div><label class="fc-label-title">Goal Wt (lbs)</label><input type="number" id="inp-goal" placeholder="150" value="150"></div>
+    </div>
+    <div class="fc-input-group">
+      <div><label class="fc-label-title">In How Many Weeks?</label><input type="number" id="inp-weeks" placeholder="12" value="12"></div>
+    </div>
 
-      <div class="fc-group fc-toggle-group">
-        <label class="fc-label-title">Are you an athlete interested in the specialized program?</label>
-        <div class="fc-toggle-segmented">
-          <input type="radio" id="athlete-no" name="athlete" value="no" checked>
-          <label for="athlete-no">NO</label>
-          <input type="radio" id="athlete-yes" name="athlete" value="yes">
-          <label for="athlete-yes">YES</label>
-        </div>
-      </div>
+    <button class="fc-btn" onclick="runFitCultureEngine()">Calculate Exact Plan</button>
 
-      <!-- SCREEN 6: METRICS -->
-      <div class="fc-screen-title">6. Let's Set Your Goals!</div>
-      <span class="fc-help-text">Used to establish precise meal plans, macros, and daily calorie targets.</span>
+    <!-- RESULTS CARD -->
+    <div class="fc-result-box" id="fc-result-box">
+      <h4>Program Assignment</h4>
+      <div class="fc-result-item"><span>Assigned Program:</span> <strong id="res-program"></strong></div>
+      <div class="fc-result-item"><span>Workout Track:</span> <strong id="res-track"></strong></div>
+      <div class="fc-result-item"><span>Daily Workout Cap:</span> <strong id="res-cap"></strong></div>
+      
+      <h4 style="margin-top: 32px;">Nutritional Targets & Realism</h4>
+      <div class="fc-result-item"><span>Assigned Meal Plan:</span> <strong id="res-meals"></strong></div>
+      <div class="fc-result-item"><span>Protein Shakes:</span> <strong id="res-shakes"></strong></div>
+      <div class="fc-result-item" id="res-rate-container"><span>Rate of Weight Loss:</span> <strong id="res-rate"></strong></div>
+      <div class="fc-result-item" id="res-burn-container"><span>Required Daily Burn Goal:</span> <strong id="res-burn"></strong></div>
+      <div class="fc-result-item" id="res-realism-container"><span>Auto-Fill Capacity Status:</span> <span id="res-realism-badge"></span></div>
+      
+      <!-- DYNAMIC UNREALISTIC GOAL LOGIC EXPLANATION CALLOUT -->
+      <div id="res-explanation-box" class="fc-explanation-box" style="display: none;"></div>
 
-      <div class="fc-input-group">
-        <div><label class="fc-label-title">Current Wt (lbs)</label><input type="number" id="inp-current" placeholder="180" value="180"></div>
-        <div><label class="fc-label-title">Goal Wt (lbs)</label><input type="number" id="inp-goal" placeholder="150" value="150"></div>
-      </div>
-      <div class="fc-input-group">
-        <div><label class="fc-label-title">In How Many Weeks?</label><input type="number" id="inp-weeks" placeholder="12" value="12"></div>
-      </div>
-
-      <button class="fc-btn" onclick="runFitCultureEngine()">Calculate Exact Plan</button>
-
-      <!-- RESULTS CARD -->
-      <div class="fc-result-box" id="fc-result-box">
-        <h4>Program Assignment</h4>
-        <div class="fc-result-item"><span>Assigned Program:</span> <strong id="res-program"></strong></div>
-        <div class="fc-result-item"><span>Workout Track:</span> <strong id="res-track"></strong></div>
-        <div class="fc-result-item"><span>Daily Workout Cap:</span> <strong id="res-cap"></strong></div>
-
-        <h4 style="margin-top: 32px;">Nutritional Targets & Realism</h4>
-        <div class="fc-result-item"><span>Assigned Meal Plan:</span> <strong id="res-meals"></strong></div>
-        <div class="fc-result-item"><span>Protein Shakes:</span> <strong id="res-shakes"></strong></div>
-        <div class="fc-result-item"><span>Rate of Weight Loss:</span> <strong id="res-rate"></strong></div>
-        <div class="fc-result-item"><span>Required Daily Burn Goal:</span> <strong id="res-burn"></strong></div>
-        <div class="fc-result-item"><span>Auto-Fill Capacity Status:</span> <span id="res-realism-badge"></span></div>
-
-        <!-- UNREALISTIC GOAL LOGIC EXPLANATION CALLOUT -->
-        <div id="res-explanation-box" class="fc-explanation-box" style="display: none;">
-          <strong>System Registration & Auto-Fill Behavior:</strong>
-          Plan registration continues normally and assigns the user to their designated track. However, because this specific weight-loss goal requires a daily burn target that exceeds what 60 minutes of auto-filled workouts can cover, the auto-fill engine stops populating workouts at the 60-minute mark. The user's registration is NOT blocked; instead, the remaining calorie gap will display on their Program Fit page for them to manually fill by logging custom workouts (e.g., extra cardio/walking) or syncing a wearable device.
-        </div>
-
-        <div style="margin-top: 24px;" id="res-modifiers-container">
-          <span style="font-size: 15px; font-weight: 600; display: block; margin-bottom: 12px; color: #000000;">Meal Modifiers Applied:</span>
-          <div id="res-modifiers"></div>
-        </div>
+      <div style="margin-top: 24px;" id="res-modifiers-container">
+        <span style="font-size: 15px; font-weight: 600; display: block; margin-bottom: 12px; color: #000000;">Meal Modifiers Applied:</span>
+        <div id="res-modifiers"></div>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    function runFitCultureEngine() {
-      const goal = document.querySelector('input[name="goal"]:checked').value;
-      const muscle = document.querySelector('input[name="muscle"]:checked').value;
-      const menopause = document.querySelector('input[name="menopause"]:checked').value;
-      const glp1 = document.querySelector('input[name="glp1"]:checked').value;
-      const time = document.querySelector('input[name="time"]:checked').value;
-      const athlete = document.querySelector('input[name="athlete"]:checked').value;
-      const hashimotos = document.querySelector('input[name="hashimotos"]:checked').value;
-      const insulin = document.querySelector('input[name="insulin"]:checked').value;
-      const lowt = document.querySelector('input[name="lowt"]:checked').value;
+<script>
+  function runFitCultureEngine() {
+    // Collect Input Values
+    const goal = document.querySelector('input[name="goal"]:checked').value;
+    const muscle = document.querySelector('input[name="muscle"]:checked').value;
+    const menopause = document.querySelector('input[name="menopause"]:checked').value;
+    const glp1 = document.querySelector('input[name="glp1"]:checked').value;
+    const time = document.querySelector('input[name="time"]:checked').value;
+    const athlete = document.querySelector('input[name="athlete"]:checked').value;
+    const hashimotos = document.querySelector('input[name="hashimotos"]:checked').value;
+    const insulin = document.querySelector('input[name="insulin"]:checked').value;
+    const lowt = document.querySelector('input[name="lowt"]:checked').value;
 
-      const currentWt = parseFloat(document.getElementById('inp-current').value) || 0;
-      const goalWt = parseFloat(document.getElementById('inp-goal').value) || 0;
-      const weeks = parseFloat(document.getElementById('inp-weeks').value) || 1;
+    const currentWt = parseFloat(document.getElementById('inp-current').value) || 0;
+    const goalWt = parseFloat(document.getElementById('inp-goal').value) || 0;
+    const weeks = parseFloat(document.getElementById('inp-weeks').value) || 1;
 
-      let program = '';
-      let track = '';
-      let cap = '';
-      let meals = '';
-      let shakes = '0 per day';
-      let dailyBurn = 'Maintenance / Surplus Target';
-      let rateOfLossText = 'N/A';
-      let exceedsCap = false;
+    // Initialize State Variables
+    let program = '';
+    let track = '';
+    let cap = '';
+    let meals = '';
+    let shakes = '0 per day';
+    let dailyBurn = 'Maintenance / Surplus Target';
+    let rateOfLossText = 'N/A';
+    let exceedsCap = false;
+    let isWeightLoss = (goal === 'lose' && currentWt > goalWt);
+    
+    // 1. Tiered Meal Plan Logic
+    let tierPlan = '';
+    if (currentWt < 140) tierPlan = 'Plan A (25/25 Macros)';
+    else if (currentWt < 160) tierPlan = 'Plan B (28/28 Macros)';
+    else if (currentWt < 180) tierPlan = 'Plan C (32/32 Macros)';
+    else if (currentWt < 200) tierPlan = 'Plan D (35/35 Macros)';
+    else tierPlan = 'Plan E (42/42 Macros)';
 
-      // Tiered Meal Plan Tier Logic
-      let tierPlan = '';
-      if (currentWt < 140) tierPlan = 'Plan A (25/25 Macros)';
-      else if (currentWt < 160) tierPlan = 'Plan B (28/28 Macros)';
-      else if (currentWt < 180) tierPlan = 'Plan C (32/32 Macros)';
-      else if (currentWt < 200) tierPlan = 'Plan D (35/35 Macros)';
-      else tierPlan = 'Plan E (42/42 Macros)';
+    // 2. Routing Priority Order
+    if (athlete === 'yes') {
+      program = 'Athlete';
+      track = 'Accelerated (Dual-Session)';
+      cap = 'No Cap (Minutes scale to burn goal)';
+      meals = 'Plan E (42/42) + 1 Extra Main Meal';
+      shakes = '4 per day';
+    } 
+    else if (goal === 'gain' || (goal === 'maintain' && muscle === 'yes')) {
+      program = 'Muscle Building';
+      track = 'Fixed Dual-Session (Surplus Focus)';
+      cap = 'Fixed Structure (No autofill burn goal)';
+      meals = 'Plan E (42/42) + 1 Extra Main Meal';
+      shakes = '4 per day';
+    } 
+    else if (menopause === 'yes') {
+      program = 'Menopause';
+      track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
+      cap = time === 'yes' ? 'No Cap (Minutes scale to burn goal)' : 'Strict 60-Minute Auto-fill Cap';
+      meals = tierPlan;
+      shakes = '4 per day';
+    } 
+    else if (glp1 === 'yes' || glp1 === 'past') {
+      program = 'GLP-1';
+      track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
+      cap = time === 'yes' ? 'No Cap (Minutes scale to burn goal)' : 'Strict 60-Minute Auto-fill Cap';
+      meals = tierPlan;
+      shakes = '4 per day';
+    } 
+    else if (goal === 'lose' && muscle === 'yes') {
+      program = 'Lose Weight + Gain Muscle';
+      track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
+      cap = time === 'yes' ? 'No Cap (Minutes scale to burn goal)' : 'Strict 60-Minute Auto-fill Cap';
+      meals = tierPlan;
+      shakes = '4 per day';
+    } 
+    else if (goal === 'maintain' && muscle === 'no') {
+      program = 'Maintenance';
+      track = 'Base Structure (Net-Zero)';
+      cap = 'Strict 60-Minute Auto-fill Cap';
+      meals = tierPlan;
+      shakes = '0 per day';
+    } 
+    else {
+      program = 'Plain Base';
+      track = 'Base';
+      cap = 'Strict 60-Minute Auto-fill Cap';
+      meals = tierPlan;
+      shakes = '0 per day';
+    }
 
-      // Routing Priority Order
-      if (athlete === 'yes') {
-        program = 'Athlete';
-        track = 'Accelerated (Dual-Session)';
-        cap = 'No Cap (Minutes scale to burn goal)';
-        meals = 'Plan E (42/42) + 1 Extra Main Meal';
-        shakes = '4 per day';
+    // 3. Daily Calorie Burn & Auto-Fill Capacity Evaluation
+    if (isWeightLoss) {
+      let weightDiff = currentWt - goalWt;
+      let weeklyRate = (weightDiff / weeks).toFixed(1);
+      rateOfLossText = weeklyRate + " lbs/week";
+
+      let totalCaloriesToBurn = weightDiff * 3500;
+      let dailyBurnAmount = Math.round(totalCaloriesToBurn / (weeks * 6));
+      dailyBurn = dailyBurnAmount + " calories/day (6 days/week)";
+
+      // Base tracks capped at 60 minutes can typically auto-fill ~500 calories max per day.
+      if (track.includes('Base') && dailyBurnAmount > 500) {
+        exceedsCap = true;
       }
-      else if (goal === 'gain' || (goal === 'maintain' && muscle === 'yes')) {
-        program = 'Muscle Building';
-        track = 'Fixed Dual-Session (Surplus Focus)';
-        cap = 'Fixed Structure (No autofill burn goal)';
-        meals = 'Plan E (42/42) + 1 Extra Main Meal';
-        shakes = '4 per day';
-      }
-      else if (menopause === 'yes') {
-        program = 'Menopause';
-        track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
-        cap = time === 'yes' ? 'No Cap (Minutes scale to burn goal)' : 'Strict 60-Minute Auto-fill Cap';
-        meals = tierPlan;
-        shakes = '4 per day';
-      }
-      else if (glp1 === 'yes' || glp1 === 'past') {
-        program = 'GLP-1';
-        track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
-        cap = time === 'yes' ? 'No Cap (Minutes scale to burn goal)' : 'Strict 60-Minute Auto-fill Cap';
-        meals = tierPlan;
-        shakes = '4 per day';
-      }
-      else if (goal === 'lose' && muscle === 'yes') {
-        program = 'Lose Weight + Gain Muscle';
-        track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
-        cap = time === 'yes' ? 'No Cap (Minutes scale to burn goal)' : 'Strict 60-Minute Auto-fill Cap';
-        meals = tierPlan;
-        shakes = '4 per day';
-      }
-      else if (goal === 'maintain' && muscle === 'no') {
-        program = 'Maintenance';
-        track = 'Base Structure (Net-Zero)';
-        cap = 'Strict 60-Minute Auto-fill Cap';
-        meals = tierPlan;
-        shakes = '0 per day';
-      }
-      else {
-        program = 'Plain Base';
-        track = 'Base';
-        cap = 'Strict 60-Minute Auto-fill Cap';
-        meals = tierPlan;
-        shakes = '0 per day';
-      }
+    }
 
-      // Daily Calorie Burn & Auto-Fill Capacity Evaluation
-      if (goal === 'lose' && currentWt > goalWt) {
-        let weightDiff = currentWt - goalWt;
-        let weeklyRate = (weightDiff / weeks).toFixed(1);
-        rateOfLossText = weeklyRate + " lbs/week";
+    // 4. Populate Core Results
+    document.getElementById('res-program').innerText = program;
+    document.getElementById('res-track').innerText = track;
+    document.getElementById('res-cap').innerText = cap;
+    document.getElementById('res-meals').innerText = meals;
+    document.getElementById('res-shakes').innerText = shakes;
 
-        let totalCaloriesToBurn = weightDiff * 3500;
-        let dailyBurnAmount = Math.round(totalCaloriesToBurn / (weeks * 6));
-        dailyBurn = dailyBurnAmount + " calories/day (6 days/week)";
+    // Toggle specific stat visibilities based on goal
+    const rateContainer = document.getElementById('res-rate-container');
+    const burnContainer = document.getElementById('res-burn-container');
+    const realismContainer = document.getElementById('res-realism-container');
+    const explanationEl = document.getElementById('res-explanation-box');
 
-        // CAPACITY EVALUATION LOGIC:
-        // Base tracks capped at 60 minutes can auto-fill ~500 calories max per day.
-        if (track.includes('Base') && dailyBurnAmount > 500) {
-          exceedsCap = true;
-        }
-      }
-
-      // Populate Results
-      document.getElementById('res-program').innerText = program;
-      document.getElementById('res-track').innerText = track;
-      document.getElementById('res-cap').innerText = cap;
-      document.getElementById('res-meals').innerText = meals;
-      document.getElementById('res-shakes').innerText = shakes;
+    if (isWeightLoss) {
+      rateContainer.style.display = 'flex';
+      burnContainer.style.display = 'flex';
+      realismContainer.style.display = 'flex';
       document.getElementById('res-rate').innerText = rateOfLossText;
       document.getElementById('res-burn').innerText = dailyBurn;
 
-      // Render Realism Badge and Logic Explanation
+      // Render Realism Badge and DYNAMIC Logic Explanation based on the Time Answer
       const badgeEl = document.getElementById('res-realism-badge');
-      const explanationEl = document.getElementById('res-explanation-box');
 
       if (exceedsCap) {
         badgeEl.innerHTML = '<span class="fc-badge fc-badge-yellow">Exceeds 60-Min Base Capacity</span>';
+        
+        if (time === 'no') {
+          explanationEl.innerHTML = `<strong>Time Constraint Warning:</strong> You indicated you do NOT have more than 1 hour per day to commit. Because this aggressive weight-loss goal requires significantly more daily calorie burning than a 60-minute class can provide, you will not have the extra time required to manually close the remaining gap. Extending your timeline is highly recommended.`;
+        } else {
+          explanationEl.innerHTML = `<strong>Manual Logging Required:</strong> You indicated you HAVE more than 1 hour per day to commit. While this Base track strictly stops auto-filling workouts at the 60-minute mark, you can use your extra time to manually close the remaining calorie gap outside the app (e.g. logging a hike or extra cardio via a wearable).`;
+        }
         explanationEl.style.display = 'block';
       } else {
         badgeEl.innerHTML = '<span class="fc-badge fc-badge-green">Fits Auto-Fill Capacity</span>';
         explanationEl.style.display = 'none';
       }
-
-      let modHtml = '';
-      if (hashimotos === 'yes') modHtml += '<span class="fc-modifier-tag">Hashimoto’s / Thyroid / PCOS</span>';
-      if (insulin === 'yes') modHtml += '<span class="fc-modifier-tag">Insulin Resistance / Type 2</span>';
-      if (lowt === 'yes') modHtml += '<span class="fc-modifier-tag">Low Testosterone</span>';
-
-      if (modHtml === '') {
-        document.getElementById('res-modifiers-container').style.display = 'none';
-      } else {
-        document.getElementById('res-modifiers').innerHTML = modHtml;
-        document.getElementById('res-modifiers-container').style.display = 'block';
-      }
-
-      document.getElementById('fc-result-box').style.display = 'block';
+    } else {
+      // Hide weight-loss specific fields if maintaining or gaining
+      rateContainer.style.display = 'none';
+      burnContainer.style.display = 'none';
+      realismContainer.style.display = 'none';
+      explanationEl.style.display = 'none';
     }
-  </script>
+
+    // 5. Build Meal Modifiers Output
+    let modHtml = '';
+    if (hashimotos === 'yes') modHtml += '<span class="fc-modifier-tag">Hashimoto’s / Thyroid / PCOS</span>';
+    if (insulin === 'yes') modHtml += '<span class="fc-modifier-tag">Insulin Resistance / Type 2</span>';
+    if (lowt === 'yes') modHtml += '<span class="fc-modifier-tag">Low Testosterone</span>';
+    
+    const modifiersContainer = document.getElementById('res-modifiers-container');
+    if (modHtml === '') {
+      modifiersContainer.style.display = 'none';
+    } else {
+      document.getElementById('res-modifiers').innerHTML = modHtml;
+      modifiersContainer.style.display = 'block';
+    }
+
+    // Display the full results card
+    document.getElementById('fc-result-box').style.display = 'block';
+  }
+</script>
+
 </body>
 </html>
