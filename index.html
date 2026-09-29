@@ -329,12 +329,12 @@
     <div class="fc-group fc-toggle-group">
       <label class="fc-label-title">Are you diabetic?</label>
       <div class="fc-toggle-segmented">
+        <input type="radio" id="diabetic-no" name="diabetic" value="no" checked>
+        <label for="diabetic-no">No</label>
         <input type="radio" id="diabetic-t1" name="diabetic" value="t1">
         <label for="diabetic-t1">Type 1</label>
         <input type="radio" id="diabetic-t2" name="diabetic" value="t2">
         <label for="diabetic-t2">Type 2</label>
-        <input type="radio" id="diabetic-no" name="diabetic" value="no" checked>
-        <label for="diabetic-no">No</label>
       </div>
     </div>
 
@@ -431,9 +431,19 @@
     <div class="fc-screen-title">6. Let's Set Your Goals!</div>
     <span class="fc-help-text">Used to establish precise meal plans, macros, and daily calorie targets.</span>
     
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Weight unit</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="unit-lbs" name="weight-unit" value="lbs" checked>
+        <label for="unit-lbs">Lbs</label>
+        <input type="radio" id="unit-kg" name="weight-unit" value="kg">
+        <label for="unit-kg">Kg</label>
+      </div>
+    </div>
+
     <div class="fc-input-group">
-      <div><label class="fc-label-title">Current Wt (lbs)</label><input type="number" id="inp-current" placeholder="180" value="180"></div>
-      <div><label class="fc-label-title">Goal Wt (lbs)</label><input type="number" id="inp-goal" placeholder="150" value="150"></div>
+      <div><label class="fc-label-title" id="label-current">Current Weight</label><input type="number" id="inp-current" placeholder="180" value="180" step="0.1" min="0"></div>
+      <div><label class="fc-label-title" id="label-goal">Goal Weight</label><input type="number" id="inp-goal" placeholder="150" value="150" step="0.1" min="0"></div>
     </div>
     <div class="fc-input-group">
       <div><label class="fc-label-title">In How Many Weeks?</label><input type="number" id="inp-weeks" placeholder="12" value="12"></div>
@@ -479,8 +489,15 @@
     const insulin = document.querySelector('input[name="insulin"]:checked').value;
     const lowt = document.querySelector('input[name="lowt"]:checked').value;
 
-    const currentWt = parseFloat(document.getElementById('inp-current').value) || 0;
-    const goalWt = parseFloat(document.getElementById('inp-goal').value) || 0;
+    const weightUnit = document.querySelector('input[name="weight-unit"]:checked').value;
+    const lbsPerKg = 2.2046226218;
+    const weightInLbs = (field) => {
+      if (field.dataset.lbs !== undefined && field.dataset.lbs !== '') return parseFloat(field.dataset.lbs) || 0;
+      const value = parseFloat(field.value) || 0;
+      return weightUnit === 'kg' ? value * lbsPerKg : value;
+    };
+    const currentWt = weightInLbs(document.getElementById('inp-current'));
+    const goalWt = weightInLbs(document.getElementById('inp-goal'));
     const weeks = parseFloat(document.getElementById('inp-weeks').value) || 1;
 
     // Initialize State Variables
@@ -556,8 +573,12 @@
     // 3. Daily Calorie Burn & Auto-Fill Capacity Evaluation
     if (isWeightLoss) {
       let weightDiff = currentWt - goalWt;
-      let weeklyRate = (weightDiff / weeks).toFixed(1);
-      rateOfLossText = weeklyRate + " lbs/week";
+      let weeklyRateLbs = weightDiff / weeks;
+      if (weightUnit === 'kg') {
+        rateOfLossText = (weeklyRateLbs / lbsPerKg).toFixed(1) + " kg/week";
+      } else {
+        rateOfLossText = weeklyRateLbs.toFixed(1) + " lbs/week";
+      }
 
       let totalCaloriesToBurn = weightDiff * 3500;
       let dailyBurnAmount = Math.round(totalCaloriesToBurn / (weeks * 6));
@@ -630,6 +651,40 @@
     // Display the full results card
     document.getElementById('fc-result-box').style.display = 'block';
   }
+
+  const lbsPerKg = 2.2046226218;
+
+  function formatWeight(value) {
+    const rounded = Math.round(value * 10) / 10;
+    return String(rounded);
+  }
+
+  function rememberWeight(field) {
+    const unit = document.querySelector('input[name="weight-unit"]:checked').value;
+    const value = parseFloat(field.value);
+    field.dataset.lbs = Number.isFinite(value) ? String(unit === 'kg' ? value * lbsPerKg : value) : '';
+  }
+
+  document.getElementById('inp-current').dataset.lbs = '180';
+  document.getElementById('inp-goal').dataset.lbs = '150';
+  ['inp-current', 'inp-goal'].forEach((id) => {
+    document.getElementById(id).addEventListener('input', (event) => rememberWeight(event.target));
+  });
+
+  document.querySelectorAll('input[name="weight-unit"]').forEach((input) => {
+    input.addEventListener('change', () => {
+      if (!input.checked) return;
+      const unit = input.value;
+      ['inp-current', 'inp-goal'].forEach((id) => {
+        const field = document.getElementById(id);
+        const lbs = parseFloat(field.dataset.lbs);
+        if (!Number.isFinite(lbs)) return;
+        field.value = formatWeight(unit === 'kg' ? lbs / lbsPerKg : lbs);
+      });
+      document.getElementById('inp-current').placeholder = unit === 'kg' ? '82' : '180';
+      document.getElementById('inp-goal').placeholder = unit === 'kg' ? '68' : '150';
+    });
+  });
 </script>
 
 </body>
