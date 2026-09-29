@@ -14,6 +14,24 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
+  .fc-show-password {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: -4px 0 8px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #000000;
+    cursor: pointer;
+  }
+  .fc-show-password input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: #54d5f5;
+    cursor: pointer;
+  }
+
   [hidden] {
     display: none !important;
   }
@@ -362,6 +380,10 @@
           <input type="password" id="fc-password" autocomplete="current-password" required>
         </div>
       </div>
+      <label class="fc-show-password" for="fc-show-password">
+        <input type="checkbox" id="fc-show-password">
+        Show password
+      </label>
       <p id="fc-lock-error" class="fc-help-text" hidden>That password is not correct.</p>
       <button class="fc-btn" type="submit">Continue</button>
     </form>
@@ -659,6 +681,10 @@
   }
 
   if (sessionStorage.getItem('fc-unlocked') === '1') showCalculator();
+
+  document.getElementById('fc-show-password').addEventListener('change', (event) => {
+    document.getElementById('fc-password').type = event.target.checked ? 'text' : 'password';
+  });
 
   document.getElementById('fc-lock-form').addEventListener('submit', async (event) => {
     event.preventDefault();
