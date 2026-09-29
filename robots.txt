@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Indexing is blocked on the page itself with a noindex meta tag.
+# Crawlers are allowed to fetch the page so they can see that tag.
