@@ -9,6 +9,11 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
   /* MAIN WRAPPER */
   .fc-calc-wrapper {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -35,7 +40,6 @@
     font-weight: 800;
     letter-spacing: -0.5px;
     color: #000000;
-    text-transform: uppercase;
   }
   .fc-calc-body {
     padding: 32px 24px;
@@ -49,7 +53,6 @@
     margin-top: 40px;
     margin-bottom: 8px;
     letter-spacing: -0.3px;
-    text-transform: uppercase;
   }
   .fc-screen-title:first-child { margin-top: 0; }
   .fc-help-text {
@@ -89,7 +92,6 @@
     transition: all 0.2s ease;
     background: #ffffff;
     color: #000000;
-    text-transform: uppercase;
   }
   .fc-radio-stacked label::after {
     content: '';
@@ -177,7 +179,6 @@
     transition: all 0.2s ease;
     margin-top: 32px;
     letter-spacing: 0.5px;
-    text-transform: uppercase;
   }
   .fc-btn:hover {
     background: #54d5f5;
@@ -202,7 +203,6 @@
     letter-spacing: -0.3px;
     border-bottom: 2px solid rgba(0,0,0,0.1);
     padding-bottom: 12px;
-    text-transform: uppercase;
   }
   .fc-result-item {
     margin: 16px 0;
@@ -285,7 +285,6 @@
   .fc-kb-header h3 {
     font-size: 24px;
     font-weight: 800;
-    text-transform: uppercase;
     margin: 0 0 8px 0;
   }
   .fc-kb-header p {
@@ -308,7 +307,6 @@
     font-size: 18px;
     font-weight: 800;
     margin: 0 0 16px 0;
-    text-transform: uppercase;
     color: #000000;
     border-bottom: 2px solid #54d5f5;
     padding-bottom: 8px;
@@ -372,9 +370,9 @@
       <label class="fc-label-title">Do you also want to gain muscle?</label>
       <div class="fc-toggle-segmented">
         <input type="radio" id="muscle-no" name="muscle" value="no" checked>
-        <label for="muscle-no">NO</label>
+        <label for="muscle-no">No</label>
         <input type="radio" id="muscle-yes" name="muscle" value="yes">
-        <label for="muscle-yes">YES</label>
+        <label for="muscle-yes">Yes</label>
       </div>
     </div>
 
@@ -384,12 +382,12 @@
     <div class="fc-group fc-toggle-group">
       <label class="fc-label-title">Are you diabetic?</label>
       <div class="fc-toggle-segmented">
-        <input type="radio" id="diabetic-t1" name="diabetic" value="t1">
-        <label for="diabetic-t1">TYPE 1</label>
-        <input type="radio" id="diabetic-t2" name="diabetic" value="t2">
-        <label for="diabetic-t2">TYPE 2</label>
         <input type="radio" id="diabetic-no" name="diabetic" value="no" checked>
-        <label for="diabetic-no">NO</label>
+        <label for="diabetic-no">No</label>
+        <input type="radio" id="diabetic-t1" name="diabetic" value="t1">
+        <label for="diabetic-t1">Type 1</label>
+        <input type="radio" id="diabetic-t2" name="diabetic" value="t2">
+        <label for="diabetic-t2">Type 2</label>
       </div>
     </div>
 
@@ -397,9 +395,9 @@
       <label class="fc-label-title">Do you have high cholesterol?</label>
       <div class="fc-toggle-segmented">
         <input type="radio" id="cholesterol-no" name="cholesterol" value="no" checked>
-        <label for="cholesterol-no">NO</label>
+        <label for="cholesterol-no">No</label>
         <input type="radio" id="cholesterol-yes" name="cholesterol" value="yes">
-        <label for="cholesterol-yes">YES</label>
+        <label for="cholesterol-yes">Yes</label>
       </div>
     </div>
 
@@ -409,9 +407,9 @@
       <label class="fc-label-title">Hashimoto’s / Thyroid / PCOS</label>
       <div class="fc-toggle-segmented">
         <input type="radio" id="hashimotos-no" name="hashimotos" value="no" checked>
-        <label for="hashimotos-no">NO</label>
+        <label for="hashimotos-no">No</label>
         <input type="radio" id="hashimotos-yes" name="hashimotos" value="yes">
-        <label for="hashimotos-yes">YES</label>
+        <label for="hashimotos-yes">Yes</label>
       </div>
     </div>
 
@@ -419,9 +417,9 @@
       <label class="fc-label-title">Insulin Resistance / Type 2 Diabetes</label>
       <div class="fc-toggle-segmented">
         <input type="radio" id="insulin-no" name="insulin" value="no" checked>
-        <label for="insulin-no">NO</label>
+        <label for="insulin-no">No</label>
         <input type="radio" id="insulin-yes" name="insulin" value="yes">
-        <label for="insulin-yes">YES</label>
+        <label for="insulin-yes">Yes</label>
       </div>
     </div>
 
@@ -429,9 +427,9 @@
       <label class="fc-label-title">Perimenopause / Menopause</label>
       <div class="fc-toggle-segmented">
         <input type="radio" id="menopause-no" name="menopause" value="no" checked>
-        <label for="menopause-no">NO</label>
+        <label for="menopause-no">No</label>
         <input type="radio" id="menopause-yes" name="menopause" value="yes">
-        <label for="menopause-yes">YES</label>
+        <label for="menopause-yes">Yes</label>
       </div>
     </div>
 
@@ -439,9 +437,9 @@
       <label class="fc-label-title">Low testosterone</label>
       <div class="fc-toggle-segmented">
         <input type="radio" id="lowt-no" name="lowt" value="no" checked>
-        <label for="lowt-no">NO</label>
+        <label for="lowt-no">No</label>
         <input type="radio" id="lowt-yes" name="lowt" value="yes">
-        <label for="lowt-yes">YES</label>
+        <label for="lowt-yes">Yes</label>
       </div>
     </div>
 
@@ -450,11 +448,11 @@
       <label class="fc-label-title">Are you currently using a GLP-1 Medication?</label>
       <div class="fc-radio-stacked">
         <input type="radio" id="glp1-yes" name="glp1" value="yes">
-        <label for="glp1-yes">YES</label>
+        <label for="glp1-yes">Yes</label>
         <input type="radio" id="glp1-no" name="glp1" value="no" checked>
-        <label for="glp1-no">NO</label>
+        <label for="glp1-no">No</label>
         <input type="radio" id="glp1-past" name="glp1" value="past">
-        <label for="glp1-past">PAST USE</label>
+        <label for="glp1-past">Past Use</label>
       </div>
     </div>
 
@@ -463,9 +461,9 @@
       <label class="fc-label-title">Do you have more than 1 hour per day to commit?</label>
       <div class="fc-toggle-segmented">
         <input type="radio" id="time-no" name="time" value="no" checked>
-        <label for="time-no">NO (≤ 60 min)</label>
+        <label for="time-no">No (≤ 60 min)</label>
         <input type="radio" id="time-yes" name="time" value="yes">
-        <label for="time-yes">YES (> 60 min)</label>
+        <label for="time-yes">Yes (> 60 min)</label>
       </div>
     </div>
 
@@ -473,18 +471,28 @@
       <label class="fc-label-title">Are you an athlete interested in the specialized program?</label>
       <div class="fc-toggle-segmented">
         <input type="radio" id="athlete-no" name="athlete" value="no" checked>
-        <label for="athlete-no">NO</label>
+        <label for="athlete-no">No</label>
         <input type="radio" id="athlete-yes" name="athlete" value="yes">
-        <label for="athlete-yes">YES</label>
+        <label for="athlete-yes">Yes</label>
       </div>
     </div>
 
     <div class="fc-screen-title">6. Let's Set Your Goals!</div>
     <span class="fc-help-text">Used to establish precise meal plans, macros, and daily calorie targets.</span>
     
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Weight unit</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="unit-lbs" name="weight-unit" value="lbs" checked>
+        <label for="unit-lbs">Lbs</label>
+        <input type="radio" id="unit-kg" name="weight-unit" value="kg">
+        <label for="unit-kg">Kg</label>
+      </div>
+    </div>
+
     <div class="fc-input-group">
-      <div><label class="fc-label-title">Current Wt (lbs)</label><input type="number" id="inp-current" placeholder="180" value="180"></div>
-      <div><label class="fc-label-title">Goal Wt (lbs)</label><input type="number" id="inp-goal" placeholder="150" value="150"></div>
+      <div><label class="fc-label-title" id="label-current">Current Weight</label><input type="number" id="inp-current" placeholder="180" value="180" step="0.1" min="0"></div>
+      <div><label class="fc-label-title" id="label-goal">Goal Weight</label><input type="number" id="inp-goal" placeholder="150" value="150" step="0.1" min="0"></div>
     </div>
     <div class="fc-input-group">
       <div><label class="fc-label-title">In How Many Weeks?</label><input type="number" id="inp-weeks" placeholder="12" value="12"></div>
@@ -510,7 +518,7 @@
       <div id="res-explanation-box" class="fc-explanation-box" style="display: none;"></div>
 
       <div style="margin-top: 24px;" id="res-modifiers-container">
-        <span style="font-size: 15px; font-weight: 800; display: block; margin-bottom: 12px; color: #000000; text-transform: uppercase;">Meal Modifiers Applied:</span>
+        <span style="font-size: 15px; font-weight: 800; display: block; margin-bottom: 12px; color: #000000;">Meal Modifiers Applied:</span>
         <div id="res-modifiers"></div>
       </div>
     </div>
@@ -624,8 +632,15 @@
     const insulin = document.querySelector('input[name="insulin"]:checked').value;
     const lowt = document.querySelector('input[name="lowt"]:checked').value;
 
-    const currentWt = parseFloat(document.getElementById('inp-current').value) || 0;
-    const goalWt = parseFloat(document.getElementById('inp-goal').value) || 0;
+    const weightUnit = document.querySelector('input[name="weight-unit"]:checked').value;
+    const lbsPerKg = 2.2046226218;
+    const weightInLbs = (field) => {
+      if (field.dataset.lbs !== undefined && field.dataset.lbs !== '') return parseFloat(field.dataset.lbs) || 0;
+      const value = parseFloat(field.value) || 0;
+      return weightUnit === 'kg' ? value * lbsPerKg : value;
+    };
+    const currentWt = weightInLbs(document.getElementById('inp-current'));
+    const goalWt = weightInLbs(document.getElementById('inp-goal'));
     const weeks = parseFloat(document.getElementById('inp-weeks').value) || 1;
 
     let program = '';
@@ -699,8 +714,12 @@
     // Daily Calorie Burn & Auto-Fill Capacity Evaluation
     if (goal === 'lose' && currentWt > goalWt) {
       let weightDiff = currentWt - goalWt;
-      let weeklyRate = (weightDiff / weeks).toFixed(1);
-      rateOfLossText = weeklyRate + " lbs/week";
+      let weeklyRateLbs = weightDiff / weeks;
+      if (weightUnit === 'kg') {
+        rateOfLossText = (weeklyRateLbs / lbsPerKg).toFixed(1) + " kg/week";
+      } else {
+        rateOfLossText = weeklyRateLbs.toFixed(1) + " lbs/week";
+      }
 
       let totalCaloriesToBurn = weightDiff * 3500;
       let dailyBurnAmount = Math.round(totalCaloriesToBurn / (weeks * 6));
@@ -754,6 +773,40 @@
 
     document.getElementById('fc-result-box').style.display = 'block';
   }
+
+  const lbsPerKg = 2.2046226218;
+
+  function formatWeight(value) {
+    const rounded = Math.round(value * 10) / 10;
+    return String(rounded);
+  }
+
+  function rememberWeight(field) {
+    const unit = document.querySelector('input[name="weight-unit"]:checked').value;
+    const value = parseFloat(field.value);
+    field.dataset.lbs = Number.isFinite(value) ? String(unit === 'kg' ? value * lbsPerKg : value) : '';
+  }
+
+  document.getElementById('inp-current').dataset.lbs = '180';
+  document.getElementById('inp-goal').dataset.lbs = '150';
+  ['inp-current', 'inp-goal'].forEach((id) => {
+    document.getElementById(id).addEventListener('input', (event) => rememberWeight(event.target));
+  });
+
+  document.querySelectorAll('input[name="weight-unit"]').forEach((input) => {
+    input.addEventListener('change', () => {
+      if (!input.checked) return;
+      const unit = input.value;
+      ['inp-current', 'inp-goal'].forEach((id) => {
+        const field = document.getElementById(id);
+        const lbs = parseFloat(field.dataset.lbs);
+        if (!Number.isFinite(lbs)) return;
+        field.value = formatWeight(unit === 'kg' ? lbs / lbsPerKg : lbs);
+      });
+      document.getElementById('inp-current').placeholder = unit === 'kg' ? '82' : '180';
+      document.getElementById('inp-goal').placeholder = unit === 'kg' ? '68' : '150';
+    });
+  });
 </script>
 
 </body>
