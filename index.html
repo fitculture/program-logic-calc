@@ -556,7 +556,7 @@
       <div class="fc-result-item"><span>Protein Shakes:</span> <strong id="res-shakes"></strong></div>
       <div class="fc-result-item"><span>Rate of Weight Loss:</span> <strong id="res-rate"></strong></div>
       <div class="fc-result-item"><span>Required Daily Burn Goal:</span> <strong id="res-burn"></strong></div>
-      <div class="fc-result-item"><span>Auto-Fill Capacity Status:</span> <span id="res-realism-badge"></span></div>
+        <div class="fc-result-item"><span>Goal Realism Status:</span> <span id="res-realism-badge"></span></div>
       
       <!-- DYNAMIC WARNING EXPLANATION -->
       <div id="res-explanation-box" class="fc-explanation-box" style="display: none;"></div>
@@ -582,17 +582,17 @@
             <li>
               <strong>Plain Base & Maintenance</strong>
               1x 15-min AM muscle session + PM cardio. 
-              <span class="fc-kb-subtext">Fixed 60-min auto-fill cap. 0 protein shakes.</span>
+              <span class="fc-kb-subtext">Placed as a static day, not auto-filled to a burn goal. 0 protein shakes. Base loss goals above 2.0 lb per week are an unrealistic timeframe.</span>
             </li>
             <li>
               <strong>Base (Menopause, GLP-1, Lose Wt + Gain Muscle)</strong>
               1x 15-min AM & 1x 15-min PM muscle sessions.
-              <span class="fc-kb-subtext">Fixed 60-min auto-fill cap. 4 protein shakes. Fixed supporting-workout rotation.</span>
+              <span class="fc-kb-subtext">Assigned when the user has 60 minutes or less. Fixed day rotation, not burn-goal auto-fill. 4 protein shakes. Loss above 2.0 lb per week is an unrealistic timeframe.</span>
             </li>
             <li>
               <strong>Accelerated (Menopause, GLP-1, Lose Wt + Gain Muscle)</strong>
               1x 25-min AM & 1x 25-min PM muscle sessions (Metabolic Stack).
-              <span class="fc-kb-subtext">No 60-min cap. Auto-fills classes sequentially until the daily burn goal is met. 4 protein shakes.</span>
+              <span class="fc-kb-subtext">Assigned when the user has more than 60 minutes. No 60-minute cap. Classes fill in order until the daily burn goal is met. 4 protein shakes.</span>
             </li>
             <li>
               <strong>Muscle Building & Athlete</strong>
@@ -732,7 +732,6 @@
     let shakes = '0 per day';
     let dailyBurn = 'Maintenance / Surplus Target';
     let rateOfLossText = 'N/A';
-    let exceedsCap = false;
     
     // Tiered Meal Plan Logic
     let tierPlan = '';
@@ -746,54 +745,69 @@
     if (athlete === 'yes') {
       program = 'Athlete';
       track = 'Accelerated (Dual-Session)';
-      cap = 'No Cap (Minutes scale to burn goal)';
+      cap = 'Dual 25-min sessions. Minutes scale to the burn goal. Extra meal.';
       meals = 'Plan E (42/42) + 1 Extra Main Meal';
       shakes = '4 per day';
     } 
     else if (goal === 'gain' || (goal === 'maintain' && muscle === 'yes')) {
       program = 'Muscle Building';
       track = 'Fixed Dual-Session (Surplus Focus)';
-      cap = 'Fixed Structure (No autofill burn goal)';
+      cap = 'Fixed dual 25-min sessions. No burn-goal auto-fill.';
       meals = 'Plan E (42/42) + 1 Extra Main Meal';
       shakes = '4 per day';
     } 
     else if (menopause === 'yes') {
       program = 'Menopause';
       track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
-      cap = time === 'yes' ? 'No Cap (Minutes scale to burn goal)' : 'Strict 60-Minute Auto-fill Cap';
+      cap = time === 'yes' ? '25-min AM and PM. No minute cap. Classes fill to the burn goal.' : '15-min AM and PM. Fixed rotation. 60-minute day.';
       meals = tierPlan;
       shakes = '4 per day';
     } 
     else if (glp1 === 'yes' || glp1 === 'past') {
       program = 'GLP-1';
       track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
-      cap = time === 'yes' ? 'No Cap (Minutes scale to burn goal)' : 'Strict 60-Minute Auto-fill Cap';
+      cap = time === 'yes' ? '25-min AM and PM. No minute cap. Classes fill to the burn goal.' : '15-min AM and PM. Fixed rotation. 60-minute day.';
       meals = tierPlan;
       shakes = '4 per day';
     } 
     else if (goal === 'lose' && muscle === 'yes') {
       program = 'Lose Weight + Gain Muscle';
       track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
-      cap = time === 'yes' ? 'No Cap (Minutes scale to burn goal)' : 'Strict 60-Minute Auto-fill Cap';
+      cap = time === 'yes' ? '25-min AM and PM. No minute cap. Classes fill to the burn goal.' : '15-min AM and PM. Fixed rotation. 60-minute day.';
       meals = tierPlan;
       shakes = '4 per day';
     } 
     else if (goal === 'maintain' && muscle === 'no') {
       program = 'Maintenance';
       track = 'Base Structure (Net-Zero)';
-      cap = 'Strict 60-Minute Auto-fill Cap';
+      cap = '15-min muscle plus cardio sized to net-zero. No shakes.';
       meals = tierPlan;
       shakes = '0 per day';
     } 
     else {
       program = 'Plain Base';
       track = 'Base';
-      cap = 'Strict 60-Minute Auto-fill Cap';
+      cap = 'Static 15-min muscle plus cardio. No auto-fill. No shakes.';
       meals = tierPlan;
       shakes = '0 per day';
     }
 
-    // Daily Calorie Burn & Auto-Fill Capacity Evaluation
+    // Daily burn uses six training days. Goal realism follows the master logic.
+    let realism = 'Not applied';
+    let realismNote = '';
+    const baseRealism = program === 'Plain Base' || program === 'Maintenance' || track === 'Base';
+    const acceleratedRealism = program !== 'Athlete' && track.includes('Accelerated');
+
+    function burnPerHour(lbs) {
+      if (lbs <= 120) return 400;
+      if (lbs <= 160) return 500;
+      if (lbs <= 220) return 700;
+      if (lbs <= 300) return 800;
+      if (lbs <= 360) return 1100;
+      if (lbs <= 420) return 1250;
+      return 1400;
+    }
+
     if (goal === 'lose' && currentWt > goalWt) {
       let weightDiff = currentWt - goalWt;
       let weeklyRateLbs = weightDiff / weeks;
@@ -805,12 +819,33 @@
 
       let totalCaloriesToBurn = weightDiff * 3500;
       let dailyBurnAmount = Math.round(totalCaloriesToBurn / (weeks * 6));
-      dailyBurn = dailyBurnAmount + " calories/day (6 days/week)";
+      dailyBurn = dailyBurnAmount + " calories/day (6 training days)";
 
-      // Base tracks capped at 60 minutes can auto-fill ~500 calories max per day.
-      if (track.includes('Base') && dailyBurnAmount > 500) {
-        exceedsCap = true;
+      const minutes = (dailyBurnAmount / (burnPerHour(currentWt) * 1.2)) * 60;
+
+      if (baseRealism && weeklyRateLbs > 2) {
+        realism = 'Unrealistic Timeframe';
+        realismNote = '<strong>Unrealistic Timeframe:</strong> Base programs are capped at 2.0 lb per week. Increase the number of weeks or adjust the goal weight before this goal can proceed.';
+      } else if (baseRealism && minutes > 60) {
+        const suggestedWeeks = Math.ceil((weightDiff * 3500) / (6 * burnPerHour(currentWt) * 1.2));
+        realism = 'Realistic';
+        realismNote = '<strong>Timeline suggestion:</strong> With 60 minutes or less a day, this goal needs about ' + suggestedWeeks + ' weeks. The user can accept that timeline or keep the original goal. Registration still proceeds.';
+      } else if (acceleratedRealism) {
+        const monthlyLoss = weeklyRateLbs * 4;
+        const maxMonthly = currentWt <= 250 ? 30 : currentWt <= 400 ? 35 : 40;
+        if (monthlyLoss > maxMonthly) {
+          realism = 'Unrealistic Timeframe';
+          realismNote = '<strong>Unrealistic Timeframe:</strong> This Accelerated goal loses about ' + monthlyLoss.toFixed(1) + ' lb per month. The limit for this weight is ' + maxMonthly + ' lb per month. Increase the weeks or adjust the goal weight.';
+        } else {
+          realism = 'Realistic';
+        }
+      } else {
+        realism = 'Realistic';
       }
+    } else if (program === 'Muscle Building') {
+      dailyBurn = 'No daily burn goal. Fixed sessions keep the surplus.';
+    } else if (program === 'Maintenance') {
+      dailyBurn = 'Net-zero. Cardio is sized to match intake.';
     }
 
     // Populate Results
@@ -822,22 +857,14 @@
     document.getElementById('res-rate').innerText = rateOfLossText;
     document.getElementById('res-burn').innerText = dailyBurn;
 
-    // Render Realism Badge and DYNAMIC Logic Explanation
     const badgeEl = document.getElementById('res-realism-badge');
     const explanationEl = document.getElementById('res-explanation-box');
-
-    if (exceedsCap) {
-      badgeEl.innerHTML = '<span class="fc-badge fc-badge-yellow">Exceeds 60-Min Base Capacity</span>';
-      
-      if (time === 'no') {
-        explanationEl.innerHTML = `<strong>Time Constraint Warning:</strong> You indicated you do NOT have more than 1 hour per day to commit. Because this aggressive weight-loss goal requires significantly more daily calorie burning than a 60-minute class can provide, you will not have the extra time required to manually close the remaining gap. Extending your timeline is highly recommended.`;
-      } else {
-        explanationEl.innerHTML = `<strong>Manual Logging Required:</strong> You indicated you HAVE more than 1 hour per day to commit. While this Base track strictly stops auto-filling workouts at the 60-minute mark, you can use your extra time to manually close the remaining calorie gap outside the app (e.g. logging a hike or extra cardio via a wearable).`;
-      }
-      
+    const badgeClass = realism === 'Unrealistic Timeframe' ? 'fc-badge fc-badge-yellow' : 'fc-badge fc-badge-green';
+    badgeEl.innerHTML = '<span class="' + badgeClass + '">' + realism + '</span>';
+    if (realismNote) {
+      explanationEl.innerHTML = realismNote;
       explanationEl.style.display = 'block';
     } else {
-      badgeEl.innerHTML = '<span class="fc-badge fc-badge-green">Fits Auto-Fill Capacity</span>';
       explanationEl.style.display = 'none';
     }
 
