@@ -346,7 +346,25 @@
 </head>
 <body>
 
-<div class="fc-calc-wrapper">
+<div id="fc-lock" class="fc-calc-wrapper">
+  <div class="fc-calc-header">
+    <h3>Fit Culture Logic Engine</h3>
+  </div>
+  <div class="fc-calc-body">
+    <form id="fc-lock-form">
+      <label class="fc-label-title" for="fc-password">Password</label>
+      <div class="fc-input-group">
+        <div>
+          <input type="password" id="fc-password" autocomplete="current-password" required>
+        </div>
+      </div>
+      <p id="fc-lock-error" class="fc-help-text" hidden>That password is not correct.</p>
+      <button class="fc-btn" type="submit">Continue</button>
+    </form>
+  </div>
+</div>
+
+<div id="fc-app" class="fc-calc-wrapper" hidden>
   <div class="fc-calc-header">
     <h3>Fit Culture Logic Engine</h3>
   </div>
@@ -621,6 +639,36 @@
 </div>
 
 <script>
+  const passwordHash = 'b89375ed48eb38d41c638192c81e52df2c50d44251d8682c9b90ccc15bf2c2e6';
+  const lockEl = document.getElementById('fc-lock');
+  const appEl = document.getElementById('fc-app');
+
+  function showCalculator() {
+    lockEl.hidden = true;
+    appEl.hidden = false;
+  }
+
+  async function sha256(value) {
+    const bytes = new TextEncoder().encode(value);
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+  }
+
+  if (sessionStorage.getItem('fc-unlocked') === '1') showCalculator();
+
+  document.getElementById('fc-lock-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const entered = document.getElementById('fc-password').value;
+    const errorEl = document.getElementById('fc-lock-error');
+    if (await sha256(entered) === passwordHash) {
+      sessionStorage.setItem('fc-unlocked', '1');
+      errorEl.hidden = true;
+      showCalculator();
+    } else {
+      errorEl.hidden = false;
+    }
+  });
+
   function runFitCultureEngine() {
     const goal = document.querySelector('input[name="goal"]:checked').value;
     const muscle = document.querySelector('input[name="muscle"]:checked').value;
