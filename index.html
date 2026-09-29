@@ -252,18 +252,18 @@
     /* EXPLANATION CALLOUT BOX */
     .fc-explanation-box {
       margin-top: 20px;
-      padding: 16px 20px;
+      padding: 18px 20px;
       background: #fffbf0;
-      border-left: 4px solid #f2994a;
-      border-radius: 8px;
+      border-left: 4px solid #54d5f5;
+      border-radius: 12px;
       font-size: 14px;
-      color: #4a3b10;
-      line-height: 1.5;
+      color: #2c2000;
+      line-height: 1.6;
     }
     .fc-explanation-box strong {
-      color: #2c2000;
+      color: #000000;
       display: block;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       font-size: 15px;
     }
 
@@ -445,12 +445,12 @@
         <div class="fc-result-item"><span>Protein Shakes:</span> <strong id="res-shakes"></strong></div>
         <div class="fc-result-item"><span>Rate of Weight Loss:</span> <strong id="res-rate"></strong></div>
         <div class="fc-result-item"><span>Required Daily Burn Goal:</span> <strong id="res-burn"></strong></div>
-        <div class="fc-result-item"><span>Goal Realism Status:</span> <span id="res-realism-badge"></span></div>
+        <div class="fc-result-item"><span>Auto-Fill Capacity Status:</span> <span id="res-realism-badge"></span></div>
 
         <!-- UNREALISTIC GOAL LOGIC EXPLANATION CALLOUT -->
         <div id="res-explanation-box" class="fc-explanation-box" style="display: none;">
-          <strong>System Logic Handling:</strong>
-          The app permits plan registration and assigns the designated track. However, because this goal exceeds standard auto-fill limits or Base track capacity (60 minutes/day), the auto-fill engine will stop filling workouts once the cap is reached. The remaining daily burn shortfall will display as an unfilled gap on the user's Program Fit page for them to manually fill (e.g., logging a custom workout or syncing a wearable device).
+          <strong>System Registration & Auto-Fill Behavior:</strong>
+          Plan registration continues normally and assigns the user to their designated track. However, because this specific weight-loss goal requires a daily burn target that exceeds what 60 minutes of auto-filled workouts can cover, the auto-fill engine stops populating workouts at the 60-minute mark. The user's registration is NOT blocked; instead, the remaining calorie gap will display on their Program Fit page for them to manually fill by logging custom workouts (e.g., extra cardio/walking) or syncing a wearable device.
         </div>
 
         <div style="margin-top: 24px;" id="res-modifiers-container">
@@ -484,7 +484,7 @@
       let shakes = '0 per day';
       let dailyBurn = 'Maintenance / Surplus Target';
       let rateOfLossText = 'N/A';
-      let isUnrealistic = false;
+      let exceedsCap = false;
 
       // Tiered Meal Plan Tier Logic
       let tierPlan = '';
@@ -545,7 +545,7 @@
         shakes = '0 per day';
       }
 
-      // Daily Calorie Burn & Goal Realism Calculations
+      // Daily Calorie Burn & Auto-Fill Capacity Evaluation
       if (goal === 'lose' && currentWt > goalWt) {
         let weightDiff = currentWt - goalWt;
         let weeklyRate = (weightDiff / weeks).toFixed(1);
@@ -555,11 +555,10 @@
         let dailyBurnAmount = Math.round(totalCaloriesToBurn / (weeks * 6));
         dailyBurn = dailyBurnAmount + " calories/day (6 days/week)";
 
-        // REALISM EVALUATION LOGIC:
-        // 1. Rate > 2.0 lbs/week is flagged as unrealistic.
-        // 2. Base tracks require > 500 cals/day (which exceeds 60 min workout auto-fill capacity).
-        if (weeklyRate > 2.0 || (track.includes('Base') && dailyBurnAmount > 500)) {
-          isUnrealistic = true;
+        // CAPACITY EVALUATION LOGIC:
+        // Base tracks capped at 60 minutes can auto-fill ~500 calories max per day.
+        if (track.includes('Base') && dailyBurnAmount > 500) {
+          exceedsCap = true;
         }
       }
 
@@ -576,11 +575,11 @@
       const badgeEl = document.getElementById('res-realism-badge');
       const explanationEl = document.getElementById('res-explanation-box');
 
-      if (isUnrealistic) {
-        badgeEl.innerHTML = '<span class="fc-badge fc-badge-yellow">Unrealistic Goal</span>';
+      if (exceedsCap) {
+        badgeEl.innerHTML = '<span class="fc-badge fc-badge-yellow">Exceeds 60-Min Base Capacity</span>';
         explanationEl.style.display = 'block';
       } else {
-        badgeEl.innerHTML = '<span class="fc-badge fc-badge-green">Realistic Goal</span>';
+        badgeEl.innerHTML = '<span class="fc-badge fc-badge-green">Fits Auto-Fill Capacity</span>';
         explanationEl.style.display = 'none';
       }
 
