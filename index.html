@@ -671,6 +671,7 @@
       <div class="fc-result-item"><span>Protein Shakes:</span> <strong id="res-shakes"></strong></div>
       <div class="fc-result-item"><span>Rate of Weight Loss:</span> <strong id="res-rate"></strong></div>
       <div class="fc-result-item"><span>Required Daily Burn Goal:</span> <strong id="res-burn"></strong></div>
+      <div class="fc-result-item"><span>Estimated Daily Training Time:</span> <strong id="res-time"></strong></div>
       <div class="fc-result-item"><span>Goal Realism Status:</span> <span id="res-realism-badge"></span></div>
       <div class="fc-result-item"><span>Estimated Body Fat:</span> <strong id="res-bf"></strong></div>
       <div class="fc-result-item"><span>Minimum Safe Weight:</span> <strong id="res-floor"></strong></div>
@@ -862,6 +863,7 @@
     let shakes = '0 per day';
     let dailyBurn = 'Maintenance / Surplus Target';
     let rateOfLossText = 'N/A';
+    let trainingTimeText = 'N/A';
 
     const planLabels = {
       A: 'Plan A (21/21 Macros)',
@@ -998,6 +1000,15 @@
       return 1400;
     }
 
+    function formatTrainingTime(totalMinutes) {
+      const rounded = Math.max(0, Math.round(totalMinutes));
+      if (rounded <= 60) return rounded + ' min';
+      const hours = Math.floor(rounded / 60);
+      const mins = rounded % 60;
+      if (mins === 0) return hours + ' hr';
+      return hours + ' hr ' + mins + ' min';
+    }
+
     if (directionError) {
       realism = 'Invalid goal weight';
       realismNote = '<strong>Goal weight check:</strong> ' + directionError;
@@ -1015,6 +1026,7 @@
       dailyBurn = dailyBurnAmount + " calories/day (6 training days)";
 
       const minutes = (dailyBurnAmount / (burnPerHour(currentWt) * 1.2)) * 60;
+      trainingTimeText = formatTrainingTime(minutes);
       const belowFloor = minimumSafe !== null && goalWt < minimumSafe;
 
       if (belowFloor) {
@@ -1064,6 +1076,7 @@
     document.getElementById('res-shakes').innerText = shakes;
     document.getElementById('res-rate').innerText = rateOfLossText;
     document.getElementById('res-burn').innerText = dailyBurn;
+    document.getElementById('res-time').innerText = trainingTimeText;
     const floorLabel = minimumSafe === null
       ? 'N/A'
       : (weightUnit === 'kg' ? (minimumSafe / lbsPerKg).toFixed(1) + ' kg' : Math.round(minimumSafe) + ' lb');
