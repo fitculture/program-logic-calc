@@ -180,10 +180,29 @@
     box-sizing: border-box;
     transition: all 0.2s ease;
   }
-  .fc-input-group input:focus {
+  .fc-input-group input:focus,
+  .fc-input-group select:focus {
     outline: none;
     border-color: #54d5f5;
     box-shadow: 0 0 0 4px rgba(84, 213, 245, 0.25);
+  }
+
+  .fc-input-group input[readonly] {
+    background: #f4f5f7;
+    color: #3a3a3a;
+  }
+
+  .fc-input-group select {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    font-size: 17px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    background: #ffffff;
+    color: #000000;
+    box-sizing: border-box;
   }
 
   /* BUTTON */
@@ -420,6 +439,25 @@
       </div>
     </div>
 
+    <div class="fc-screen-title">Profile</div>
+    <span class="fc-help-text">Used for the body-fat floor. Menopause assigns a program for Female or Other only.</span>
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Biological sex</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="sex-female" name="sex" value="female" checked>
+        <label for="sex-female">Female</label>
+        <input type="radio" id="sex-male" name="sex" value="male">
+        <label for="sex-male">Male</label>
+        <input type="radio" id="sex-other" name="sex" value="other">
+        <label for="sex-other">Other</label>
+      </div>
+    </div>
+    <div class="fc-input-group">
+      <div><label class="fc-label-title">Age</label><input type="number" id="inp-age" placeholder="32" value="32" min="1" step="1"></div>
+      <div><label class="fc-label-title">Height (ft)</label><input type="number" id="inp-feet" placeholder="5" value="5" min="0" step="1"></div>
+      <div><label class="fc-label-title">Height (in)</label><input type="number" id="inp-inches" placeholder="4" value="4" min="0" max="11" step="1"></div>
+    </div>
+
     <div class="fc-screen-title">2. Tell Us About Your Health</div>
     <span class="fc-help-text">Saved to profile. Does not change primary program track.</span>
     
@@ -521,8 +559,78 @@
       </div>
     </div>
 
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Did you attend our Fitness Retreat?</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="retreat-no" name="retreat" value="no" checked>
+        <label for="retreat-no">No</label>
+        <input type="radio" id="retreat-yes" name="retreat" value="yes">
+        <label for="retreat-yes">Yes</label>
+      </div>
+    </div>
+    <div id="retreat-follow" hidden>
+      <div class="fc-group fc-toggle-group">
+        <label class="fc-label-title">Are you within 5 lb of your exit weight?</label>
+        <div class="fc-toggle-segmented">
+          <input type="radio" id="retreat-close-no" name="retreat-close" value="no" checked>
+          <label for="retreat-close-no">No</label>
+          <input type="radio" id="retreat-close-yes" name="retreat-close" value="yes">
+          <label for="retreat-close-yes">Yes</label>
+        </div>
+      </div>
+      <div class="fc-group" id="retreat-program-group" hidden>
+        <label class="fc-label-title" for="retreat-program">Retreat program</label>
+        <div class="fc-input-group">
+          <div>
+            <select id="retreat-program">
+              <option value="none">None — use normal assignment</option>
+              <option value="plain">Plain Base</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="menopause-base">Menopause Base</option>
+              <option value="menopause-accel">Menopause Accelerated</option>
+              <option value="glp1-base">GLP-1 Base</option>
+              <option value="glp1-accel">GLP-1 Accelerated</option>
+              <option value="lwg-base">Lose Weight + Gain Muscle Base</option>
+              <option value="lwg-accel">Lose Weight + Gain Muscle Accelerated</option>
+              <option value="muscle">Muscle Building</option>
+              <option value="athlete">Athlete</option>
+            </select>
+          </div>
+        </div>
+        <span class="fc-help-text">Both Yes answers override the normal program order. This selected program is the full assignment.</span>
+      </div>
+    </div>
+
     <div class="fc-screen-title">6. Let's Set Your Goals!</div>
-    <span class="fc-help-text">Used to establish precise meal plans, macros, and daily calorie targets.</span>
+    <span class="fc-help-text">Used to establish precise meal plans, macros, and daily calorie targets. Muscular and big-boned each count as one Yes. Extreme muscle moves the plan up one tier, capped at Plan E.</span>
+
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Muscular</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="frame-muscular-no" name="frame-muscular" value="no" checked>
+        <label for="frame-muscular-no">No</label>
+        <input type="radio" id="frame-muscular-yes" name="frame-muscular" value="yes">
+        <label for="frame-muscular-yes">Yes</label>
+      </div>
+    </div>
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Big-boned</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="frame-bone-no" name="frame-bone" value="no" checked>
+        <label for="frame-bone-no">No</label>
+        <input type="radio" id="frame-bone-yes" name="frame-bone" value="yes">
+        <label for="frame-bone-yes">Yes</label>
+      </div>
+    </div>
+    <div class="fc-group fc-toggle-group">
+      <label class="fc-label-title">Extreme muscle / lean mass</label>
+      <div class="fc-toggle-segmented">
+        <input type="radio" id="frame-extreme-no" name="frame-extreme" value="no" checked>
+        <label for="frame-extreme-no">No</label>
+        <input type="radio" id="frame-extreme-yes" name="frame-extreme" value="yes">
+        <label for="frame-extreme-yes">Yes</label>
+      </div>
+    </div>
     
     <div class="fc-group fc-toggle-group">
       <label class="fc-label-title">Weight unit</label>
@@ -540,6 +648,7 @@
     </div>
     <div class="fc-input-group">
       <div><label class="fc-label-title">In How Many Weeks?</label><input type="number" id="inp-weeks" placeholder="12" value="12"></div>
+      <div><label class="fc-label-title">Body fat % (optional)</label><input type="number" id="inp-bf" placeholder="Estimate if blank" step="0.1" min="0" max="80"></div>
     </div>
 
     <button class="fc-btn" onclick="runFitCultureEngine()">Calculate Exact Plan</button>
@@ -556,7 +665,9 @@
       <div class="fc-result-item"><span>Protein Shakes:</span> <strong id="res-shakes"></strong></div>
       <div class="fc-result-item"><span>Rate of Weight Loss:</span> <strong id="res-rate"></strong></div>
       <div class="fc-result-item"><span>Required Daily Burn Goal:</span> <strong id="res-burn"></strong></div>
-        <div class="fc-result-item"><span>Goal Realism Status:</span> <span id="res-realism-badge"></span></div>
+      <div class="fc-result-item"><span>Goal Realism Status:</span> <span id="res-realism-badge"></span></div>
+      <div class="fc-result-item"><span>Estimated Body Fat:</span> <strong id="res-bf"></strong></div>
+      <div class="fc-result-item"><span>Minimum Safe Weight:</span> <strong id="res-floor"></strong></div>
       
       <!-- DYNAMIC WARNING EXPLANATION -->
       <div id="res-explanation-box" class="fc-explanation-box" style="display: none;"></div>
@@ -714,6 +825,17 @@
     const insulin = document.querySelector('input[name="insulin"]:checked').value;
     const lowt = document.querySelector('input[name="lowt"]:checked').value;
 
+    const sex = document.querySelector('input[name="sex"]:checked').value;
+    const menopauseApplies = menopause === 'yes' && sex !== 'male';
+    const frameMuscular = document.querySelector('input[name="frame-muscular"]:checked').value;
+    const frameBone = document.querySelector('input[name="frame-bone"]:checked').value;
+    const frameExtreme = document.querySelector('input[name="frame-extreme"]:checked').value;
+    const retreat = document.querySelector('input[name="retreat"]:checked').value;
+    const retreatClose = document.querySelector('input[name="retreat-close"]:checked').value;
+    const retreatProgram = document.getElementById('retreat-program').value;
+    const age = parseFloat(document.getElementById('inp-age').value) || 0;
+    const heightIn = (parseFloat(document.getElementById('inp-feet').value) || 0) * 12 + (parseFloat(document.getElementById('inp-inches').value) || 0);
+
     const weightUnit = document.querySelector('input[name="weight-unit"]:checked').value;
     const lbsPerKg = 2.2046226218;
     const weightInLbs = (field) => {
@@ -732,71 +854,131 @@
     let shakes = '0 per day';
     let dailyBurn = 'Maintenance / Surplus Target';
     let rateOfLossText = 'N/A';
-    
-    // Tiered Meal Plan Logic
-    let tierPlan = '';
-    if (currentWt <= 120) tierPlan = 'Plan A (21/21 Macros)';
-    else if (currentWt <= 160) tierPlan = 'Plan B (25/25 Macros)';
-    else if (currentWt <= 200) tierPlan = 'Plan C (30/30 Macros)';
-    else if (currentWt <= 250) tierPlan = 'Plan D (35/35 Macros)';
-    else tierPlan = 'Plan E (42/42 Macros)';
 
-    // Routing Priority Order
-    if (athlete === 'yes') {
-      program = 'Athlete';
-      track = 'Accelerated (Dual-Session)';
-      cap = 'Dual 25-min sessions. Minutes scale to the burn goal. Extra meal.';
-      meals = 'Plan E (42/42) + 1 Extra Main Meal';
-      shakes = '4 per day';
-    } 
-    else if (goal === 'gain' || (goal === 'maintain' && muscle === 'yes')) {
-      program = 'Muscle Building';
-      track = 'Fixed Dual-Session (Surplus Focus)';
-      cap = 'Fixed dual 25-min sessions. No burn-goal auto-fill.';
-      meals = 'Plan E (42/42) + 1 Extra Main Meal';
-      shakes = '4 per day';
-    } 
-    else if (menopause === 'yes') {
-      program = 'Menopause';
-      track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
-      cap = time === 'yes' ? '25-min AM and PM. No minute cap. Classes fill to the burn goal.' : '15-min AM and PM. Fixed rotation. 60-minute day.';
-      meals = tierPlan;
-      shakes = '4 per day';
-    } 
-    else if (glp1 === 'yes' || glp1 === 'past') {
-      program = 'GLP-1';
-      track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
-      cap = time === 'yes' ? '25-min AM and PM. No minute cap. Classes fill to the burn goal.' : '15-min AM and PM. Fixed rotation. 60-minute day.';
-      meals = tierPlan;
-      shakes = '4 per day';
-    } 
-    else if (goal === 'lose' && muscle === 'yes') {
-      program = 'Lose Weight + Gain Muscle';
-      track = time === 'yes' ? 'Accelerated (Metabolic Stack)' : 'Base';
-      cap = time === 'yes' ? '25-min AM and PM. No minute cap. Classes fill to the burn goal.' : '15-min AM and PM. Fixed rotation. 60-minute day.';
-      meals = tierPlan;
-      shakes = '4 per day';
-    } 
-    else if (goal === 'maintain' && muscle === 'no') {
-      program = 'Maintenance';
-      track = 'Base Structure (Net-Zero)';
-      cap = '15-min muscle plus cardio sized to net-zero. No shakes.';
-      meals = tierPlan;
-      shakes = '0 per day';
-    } 
-    else {
-      program = 'Plain Base';
-      track = 'Base';
-      cap = 'Static 15-min muscle plus cardio. No auto-fill. No shakes.';
-      meals = tierPlan;
-      shakes = '0 per day';
+    const planLabels = {
+      A: 'Plan A (21/21 Macros)',
+      B: 'Plan B (25/25 Macros)',
+      C: 'Plan C (30/30 Macros)',
+      D: 'Plan D (35/35 Macros)',
+      E: 'Plan E (42/42 Macros)'
+    };
+
+    function tierPlanFor(lbs) {
+      const yesCount = (frameMuscular === 'yes' ? 1 : 0) + (frameBone === 'yes' ? 1 : 0);
+      let row;
+      if (lbs <= 120) row = ['A', 'B', 'C'];
+      else if (lbs <= 160) row = ['B', 'C', 'D'];
+      else if (lbs <= 200) row = ['C', 'D', 'E'];
+      else row = ['D', 'E', 'E'];
+      let code = row[Math.min(yesCount, 2)];
+      if (frameExtreme === 'yes') {
+        const order = ['A', 'B', 'C', 'D', 'E'];
+        code = order[Math.min(order.indexOf(code) + 1, 4)];
+      }
+      return planLabels[code];
     }
 
-    // Daily burn uses six training days. Goal realism follows the master logic.
+    const tierPlan = tierPlanFor(currentWt);
+    const fixedMeal = 'Plan E (42/42) + 1 Extra Main Meal';
+
+    function assignNamed(name) {
+      if (name === 'athlete') {
+        program = 'Athlete';
+        track = 'Accelerated (Dual-Session)';
+        cap = 'Dual 25-min sessions. Minutes scale to the burn goal. Extra meal.';
+        meals = fixedMeal;
+        shakes = '4 per day';
+      } else if (name === 'muscle') {
+        program = 'Muscle Building';
+        track = 'Fixed Dual-Session (Surplus Focus)';
+        cap = 'Fixed dual 25-min sessions. No burn-goal auto-fill.';
+        meals = fixedMeal;
+        shakes = '4 per day';
+      } else if (name === 'maintenance') {
+        program = 'Maintenance';
+        track = 'Base Structure (Net-Zero)';
+        cap = '15-min muscle plus cardio sized to net-zero. No shakes.';
+        meals = tierPlan;
+        shakes = '0 per day';
+      } else if (name === 'plain') {
+        program = 'Plain Base';
+        track = 'Base';
+        cap = 'Static 15-min muscle plus cardio. No auto-fill. No shakes.';
+        meals = tierPlan;
+        shakes = '0 per day';
+      } else {
+        const accelerated = name.endsWith('accel');
+        program = name.startsWith('menopause') ? 'Menopause' : name.startsWith('glp1') ? 'GLP-1' : 'Lose Weight + Gain Muscle';
+        track = accelerated ? 'Accelerated (Metabolic Stack)' : 'Base';
+        cap = accelerated ? '25-min AM and PM. No minute cap. Classes fill to the burn goal.' : '15-min AM and PM. Fixed rotation. 60-minute day.';
+        meals = tierPlan;
+        shakes = '4 per day';
+      }
+    }
+
+    const retreatOverride = retreat === 'yes' && retreatClose === 'yes' && retreatProgram !== 'none';
+    if (retreatOverride) {
+      assignNamed(retreatProgram);
+    } else if (athlete === 'yes') {
+      assignNamed('athlete');
+    } else if (goal === 'gain' || (goal === 'maintain' && muscle === 'yes')) {
+      assignNamed('muscle');
+    } else if (menopauseApplies) {
+      assignNamed(time === 'yes' ? 'menopause-accel' : 'menopause-base');
+    } else if (glp1 === 'yes' || glp1 === 'past') {
+      assignNamed(time === 'yes' ? 'glp1-accel' : 'glp1-base');
+    } else if (goal === 'lose' && muscle === 'yes') {
+      assignNamed(time === 'yes' ? 'lwg-accel' : 'lwg-base');
+    } else if (goal === 'maintain' && muscle === 'no') {
+      assignNamed('maintenance');
+    } else {
+      assignNamed('plain');
+    }
+
+    function estimateBodyFat() {
+      const manual = parseFloat(document.getElementById('inp-bf').value);
+      if (Number.isFinite(manual) && document.getElementById('inp-bf').value !== '') return manual;
+      let bf;
+      if (sex === 'male') {
+        const ageAdj = (age - 32) * 0.15;
+        let weightAdj;
+        if (currentWt < 200) weightAdj = -0.6 * ((200 - currentWt) / 5);
+        else if (currentWt <= 250) weightAdj = 0.8 * ((currentWt - 200) / 5);
+        else if (currentWt <= 300) weightAdj = (50 / 5 * 0.8) + ((currentWt - 250) / 6);
+        else weightAdj = (50 / 5 * 0.8) + (50 / 6) + ((currentWt - 300) / 12);
+        bf = 16 + ageAdj + weightAdj + (-0.9 * (heightIn - 70));
+      } else {
+        const ageAdj = (age - 32) * 0.15;
+        const heightFactor = Math.max(0.2, 1 + 0.1 * (heightIn - 64));
+        const weightAdj = currentWt <= 225
+          ? ((currentWt - 150) / 5) * 1.25
+          : ((225 - 150) / 5) * 1.25 + ((currentWt - 225) / 8);
+        bf = 28 + ageAdj + (weightAdj * heightFactor);
+      }
+      if (frameMuscular === 'yes') bf -= 5;
+      if (frameBone === 'yes') bf -= 2;
+      if (sex === 'male') return Math.min(60, Math.max(6, bf));
+      return Math.min(65, Math.max(10, bf));
+    }
+
+    const bodyFat = estimateBodyFat();
+    let minimumSafe = null;
+    if (program !== 'Muscle Building' && currentWt > goalWt) {
+      const lean = currentWt * (1 - bodyFat / 100);
+      const projectedLean = lean - (0.2 * (currentWt - goalWt));
+      const minPct = sex === 'male' ? 0.06 : 0.10;
+      minimumSafe = projectedLean / (1 - minPct);
+    }
+
     let realism = 'Not applied';
     let realismNote = '';
     const baseRealism = program === 'Plain Base' || program === 'Maintenance' || track === 'Base';
     const acceleratedRealism = program !== 'Athlete' && track.includes('Accelerated');
+    const directionError = goal === 'lose' && goalWt > currentWt
+      ? 'Lose weight requires the goal weight to be at or below the current weight.'
+      : goal === 'gain' && goalWt < currentWt
+        ? 'Gain weight requires the goal weight to be at or above the current weight.'
+        : '';
 
     function burnPerHour(lbs) {
       if (lbs <= 120) return 400;
@@ -808,7 +990,10 @@
       return 1400;
     }
 
-    if (goal === 'lose' && currentWt > goalWt) {
+    if (directionError) {
+      realism = 'Invalid goal weight';
+      realismNote = '<strong>Goal weight check:</strong> ' + directionError;
+    } else if (goal === 'lose' && currentWt > goalWt) {
       let weightDiff = currentWt - goalWt;
       let weeklyRateLbs = weightDiff / weeks;
       if (weightUnit === 'kg') {
@@ -822,8 +1007,12 @@
       dailyBurn = dailyBurnAmount + " calories/day (6 training days)";
 
       const minutes = (dailyBurnAmount / (burnPerHour(currentWt) * 1.2)) * 60;
+      const belowFloor = minimumSafe !== null && goalWt < minimumSafe;
 
-      if (baseRealism && weeklyRateLbs > 2) {
+      if (belowFloor) {
+        realism = 'Unrealistic Goal';
+        realismNote = '<strong>Unrealistic Goal:</strong> This goal weight is below the essential body-fat floor of about ' + (weightUnit === 'kg' ? (minimumSafe / lbsPerKg).toFixed(1) + ' kg' : Math.round(minimumSafe) + ' lb') + '. Estimated body fat is ' + bodyFat.toFixed(1) + '%.';
+      } else if (baseRealism && weeklyRateLbs > 2) {
         realism = 'Unrealistic Timeframe';
         realismNote = '<strong>Unrealistic Timeframe:</strong> Base programs are capped at 2.0 lb per week. Increase the number of weeks or adjust the goal weight before this goal can proceed.';
       } else if (baseRealism && minutes > 60) {
@@ -848,6 +1037,13 @@
       dailyBurn = 'Net-zero. Cardio is sized to match intake.';
     }
 
+    if (menopause === 'yes' && sex === 'male' && !retreatOverride) {
+      realismNote += (realismNote ? '<br>' : '') + '<strong>Menopause:</strong> This answer assigns a program for Female or Other users only, so Male stays on the next matching program.';
+    }
+    if (goal === 'maintain' && muscle === 'yes' && program === 'Muscle Building') {
+      realismNote += (realismNote ? '<br>' : '') + '<strong>Note:</strong> This program builds lean mass. Your weight may go up even though your body fat stays the same.';
+    }
+
     // Populate Results
     document.getElementById('res-program').innerText = program;
     document.getElementById('res-track').innerText = track;
@@ -856,15 +1052,21 @@
     document.getElementById('res-shakes').innerText = shakes;
     document.getElementById('res-rate').innerText = rateOfLossText;
     document.getElementById('res-burn').innerText = dailyBurn;
+    const floorLabel = minimumSafe === null
+      ? 'N/A'
+      : (weightUnit === 'kg' ? (minimumSafe / lbsPerKg).toFixed(1) + ' kg' : Math.round(minimumSafe) + ' lb');
+    document.getElementById('res-bf').innerText = bodyFat.toFixed(1) + '%';
+    document.getElementById('res-floor').innerText = floorLabel;
 
     const badgeEl = document.getElementById('res-realism-badge');
     const explanationEl = document.getElementById('res-explanation-box');
-    const badgeClass = realism === 'Unrealistic Timeframe' ? 'fc-badge fc-badge-yellow' : 'fc-badge fc-badge-green';
+    const badgeClass = realism === 'Realistic' || realism === 'Not applied' ? 'fc-badge fc-badge-green' : 'fc-badge fc-badge-yellow';
     badgeEl.innerHTML = '<span class="' + badgeClass + '">' + realism + '</span>';
     if (realismNote) {
       explanationEl.innerHTML = realismNote;
       explanationEl.style.display = 'block';
     } else {
+      explanationEl.innerHTML = '';
       explanationEl.style.display = 'none';
     }
 
@@ -898,8 +1100,36 @@
 
   document.getElementById('inp-current').dataset.lbs = '180';
   document.getElementById('inp-goal').dataset.lbs = '150';
+
+  function syncMaintain() {
+    const maintain = document.getElementById('goal-maintain').checked;
+    const currentField = document.getElementById('inp-current');
+    const goalField = document.getElementById('inp-goal');
+    goalField.readOnly = maintain;
+    if (!maintain) return;
+    goalField.dataset.lbs = currentField.dataset.lbs || '';
+    goalField.value = currentField.value;
+  }
+
+  function syncRetreat() {
+    const attended = document.getElementById('retreat-yes').checked;
+    const close = document.getElementById('retreat-close-yes').checked;
+    document.getElementById('retreat-follow').hidden = !attended;
+    document.getElementById('retreat-program-group').hidden = !(attended && close);
+  }
+
   ['inp-current', 'inp-goal'].forEach((id) => {
-    document.getElementById(id).addEventListener('input', (event) => rememberWeight(event.target));
+    document.getElementById(id).addEventListener('input', (event) => {
+      rememberWeight(event.target);
+      if (event.target.id === 'inp-current') syncMaintain();
+    });
+  });
+
+  document.querySelectorAll('input[name="goal"]').forEach((input) => {
+    input.addEventListener('change', syncMaintain);
+  });
+  document.querySelectorAll('input[name="retreat"], input[name="retreat-close"]').forEach((input) => {
+    input.addEventListener('change', syncRetreat);
   });
 
   document.querySelectorAll('input[name="weight-unit"]').forEach((input) => {
@@ -912,6 +1142,7 @@
         if (!Number.isFinite(lbs)) return;
         field.value = formatWeight(unit === 'kg' ? lbs / lbsPerKg : lbs);
       });
+      syncMaintain();
       document.getElementById('inp-current').placeholder = unit === 'kg' ? '82' : '180';
       document.getElementById('inp-goal').placeholder = unit === 'kg' ? '68' : '150';
     });
