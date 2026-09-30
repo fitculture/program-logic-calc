@@ -440,7 +440,7 @@
     </div>
 
     <div class="fc-screen-title">Profile</div>
-    <span class="fc-help-text">Used for the body-fat floor. Menopause assigns a program for Female or Other only.</span>
+    <span class="fc-help-text">Used for the body-fat floor. Menopause assigns a program for Female only.</span>
     <div class="fc-group fc-toggle-group">
       <label class="fc-label-title">Biological sex</label>
       <div class="fc-toggle-segmented">
@@ -448,8 +448,6 @@
         <label for="sex-female">Female</label>
         <input type="radio" id="sex-male" name="sex" value="male">
         <label for="sex-male">Male</label>
-        <input type="radio" id="sex-other" name="sex" value="other">
-        <label for="sex-other">Other</label>
       </div>
     </div>
     <div class="fc-input-group">
@@ -826,7 +824,7 @@
     const lowt = document.querySelector('input[name="lowt"]:checked').value;
 
     const sex = document.querySelector('input[name="sex"]:checked').value;
-    const menopauseApplies = menopause === 'yes' && sex !== 'male';
+    const menopauseApplies = menopause === 'yes' && sex === 'female';
     const frameMuscular = document.querySelector('input[name="frame-muscular"]:checked').value;
     const frameBone = document.querySelector('input[name="frame-bone"]:checked').value;
     const frameExtreme = document.querySelector('input[name="frame-extreme"]:checked').value;
@@ -1038,7 +1036,7 @@
     }
 
     if (menopause === 'yes' && sex === 'male' && !retreatOverride) {
-      realismNote += (realismNote ? '<br>' : '') + '<strong>Menopause:</strong> This answer assigns a program for Female or Other users only, so Male stays on the next matching program.';
+      realismNote += (realismNote ? '<br>' : '') + '<strong>Menopause:</strong> This answer assigns a program for Female users only, so Male stays on the next matching program.';
     }
     if (goal === 'maintain' && muscle === 'yes' && program === 'Muscle Building') {
       realismNote += (realismNote ? '<br>' : '') + '<strong>Note:</strong> This program builds lean mass. Your weight may go up even though your body fat stays the same.';
