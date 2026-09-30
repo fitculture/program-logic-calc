@@ -235,6 +235,14 @@
     border: 2px solid #54d5f5;
     box-shadow: 0 12px 40px rgba(84, 213, 245, 0.18);
     display: none;
+    scroll-margin-top: 16px;
+  }
+  @keyframes fc-result-flash {
+    from { box-shadow: 0 0 0 6px rgba(84, 213, 245, 0.65); }
+    to { box-shadow: 0 12px 40px rgba(84, 213, 245, 0.18); }
+  }
+  .fc-result-box.fc-result-fresh {
+    animation: fc-result-flash 0.7s ease;
   }
   .fc-result-box h4 {
     margin: 0 0 20px 0;
@@ -649,7 +657,7 @@
       <div><label class="fc-label-title">Body fat % (optional)</label><input type="number" id="inp-bf" placeholder="Estimate if blank" step="0.1" min="0" max="80"></div>
     </div>
 
-    <button class="fc-btn" onclick="runFitCultureEngine()">Calculate Exact Plan</button>
+    <button class="fc-btn" id="fc-calculate" type="button">Calculate Exact Plan</button>
 
     <!-- CALCULATOR RESULTS -->
     <div class="fc-result-box" id="fc-result-box">
@@ -813,6 +821,8 @@
   });
 
   function runFitCultureEngine() {
+    rememberWeight(document.getElementById('inp-current'));
+    rememberWeight(document.getElementById('inp-goal'));
     const goal = document.querySelector('input[name="goal"]:checked').value;
     const muscle = document.querySelector('input[name="muscle"]:checked').value;
     const menopause = document.querySelector('input[name="menopause"]:checked').value;
@@ -1029,6 +1039,10 @@
       } else {
         realism = 'Realistic';
       }
+    } else if (goal === 'lose' && currentWt === goalWt) {
+      realismNote = '<strong>Goal weight:</strong> The goal weight matches the current weight, so there is no loss to score. Lower the goal weight, then calculate again.';
+    } else if (goal === 'gain' && currentWt === goalWt) {
+      realismNote = '<strong>Goal weight:</strong> The goal weight matches the current weight, so there is no gain to score. Raise the goal weight, then calculate again.';
     } else if (program === 'Muscle Building') {
       dailyBurn = 'No daily burn goal. Fixed sessions keep the surplus.';
     } else if (program === 'Maintenance') {
@@ -1080,7 +1094,12 @@
       document.getElementById('res-modifiers-container').style.display = 'block';
     }
 
-    document.getElementById('fc-result-box').style.display = 'block';
+    const resultBox = document.getElementById('fc-result-box');
+    resultBox.style.display = 'block';
+    resultBox.classList.remove('fc-result-fresh');
+    void resultBox.offsetWidth;
+    resultBox.classList.add('fc-result-fresh');
+    resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   const lbsPerKg = 2.2046226218;
@@ -1099,15 +1118,40 @@
   document.getElementById('inp-current').dataset.lbs = '180';
   document.getElementById('inp-goal').dataset.lbs = '150';
 
+  let goalBeforeMaintain = null;
+
   function syncMaintain() {
     const maintain = document.getElementById('goal-maintain').checked;
     const currentField = document.getElementById('inp-current');
     const goalField = document.getElementById('inp-goal');
-    goalField.readOnly = maintain;
-    if (!maintain) return;
-    goalField.dataset.lbs = currentField.dataset.lbs || '';
-    goalField.value = currentField.value;
+    if (maintain) {
+      if (!goalField.readOnly) {
+        goalBeforeMaintain = { lbs: goalField.dataset.lbs || '', value: goalField.value };
+      }
+      goalField.readOnly = true;
+      goalField.dataset.lbs = currentField.dataset.lbs || '';
+      goalField.value = currentField.value;
+      return;
+    }
+    goalField.readOnly = false;
+    if (!goalBeforeMaintain) return;
+    goalField.dataset.lbs = goalBeforeMaintain.lbs;
+    const savedLbs = parseFloat(goalBeforeMaintain.lbs);
+    const unit = document.querySelector('input[name="weight-unit"]:checked').value;
+    goalField.value = Number.isFinite(savedLbs)
+      ? formatWeight(unit === 'kg' ? savedLbs / lbsPerKg : savedLbs)
+      : goalBeforeMaintain.value;
+    goalBeforeMaintain = null;
   }
+
+  document.getElementById('fc-calculate').addEventListener('pointerdown', () => {
+    const active = document.activeElement;
+    if (active && active.blur && active.id !== 'fc-calculate') active.blur();
+  });
+  document.getElementById('fc-calculate').addEventListener('click', (event) => {
+    event.preventDefault();
+    runFitCultureEngine();
+  });
 
   function syncRetreat() {
     const attended = document.getElementById('retreat-yes').checked;
