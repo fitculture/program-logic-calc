@@ -608,8 +608,8 @@
     </div>
 
     <div class="fc-screen-title">6. Let's Set Your Goals!</div>
-    <span class="fc-help-text">Body type is a proposed app rule, waiting for confirmation. It is not a Master Logic rule yet. Ectomorph sets Muscular No and Big-boned No. Mesomorph sets Muscular Yes and Big-boned No. Endomorph sets Muscular No and Big-boned Yes. Those two values go into the existing meal table. Gain Muscle is a separate goal and does not change Muscular. Extreme muscle stays its own question, and Ectomorph does not turn it on.</span>
-    <span class="fc-help-text">The meal table, the body-fat estimate, and the frame adjustment can use Muscular Yes and Big-boned Yes together. This single choice cannot represent that combination, so the Yes + Yes column cannot be selected. At 120 lb or under the selectable plans are A or B. At 121–160 lb: B or C. At 161–200 lb: C or D. At 201 lb and above: D or E. Extreme muscle can still move the selected plan up one tier, capped at Plan E.</span>
+    <span class="fc-help-text">Proposed mapping, not confirmed in the Master Logic. Ectomorph is No + No. Mesomorph and Endomorph are each one Yes, so they share a meal plan. Body fat still differs: Mesomorph lowers it by 5 points, and Endomorph lowers it by 2. At 120 lb or under, Ectomorph is Plan A and the other two are Plan B. At 121–160 lb: Plan B and Plan C. At 161–200 lb: Plan C and Plan D. At 201 lb and above: Plan D and Plan E. Extreme muscle can move that plan up one tier and stops at Plan E. Gain Muscle does not change Body Type.</span>
+    <span class="fc-help-text">Muscular Yes and Big-boned Yes together is no longer selectable. That Yes + Yes column remains in the formula and cannot be reached from this question.</span>
 
     <div class="fc-group">
       <label class="fc-label-title">Body type</label>
@@ -890,8 +890,8 @@
       }
       const column = yesCount === 0 ? 'No + No' : yesCount === 1 ? 'One Yes' : 'Yes + Yes';
       const bracket = lbs <= 120 ? '120 lb or under' : lbs <= 160 ? '121–160 lb' : lbs <= 200 ? '161–200 lb' : '201 lb and above';
-      let reason = 'Proposed mapping, not Master Logic yet: ' + mappedBody.label + ' sets Muscular ' + (frameMuscular === 'yes' ? 'Yes' : 'No') + ' and Big-boned ' + (frameBone === 'yes' ? 'Yes' : 'No') + '. ';
-      reason += column + ' at ' + bracket + ' is Plan ' + beforeBump + '.';
+      const fatNote = frameMuscular === 'yes' ? ' Body fat uses the Muscular adjustment, minus 5 points.' : frameBone === 'yes' ? ' Body fat uses the Big-boned adjustment, minus 2 points.' : ' Body fat uses neither adjustment.';
+      let reason = 'Proposed mapping, not confirmed in the Master Logic. ' + mappedBody.label + ' is ' + column + '. At ' + bracket + ' that is Plan ' + beforeBump + '.' + fatNote;
       if (frameExtreme === 'yes' && code !== beforeBump) reason += ' Extreme muscle moves it to Plan ' + code + '.';
       else if (frameExtreme === 'yes') reason += ' Extreme muscle is already at Plan E, so it stays there.';
       else reason += ' Extreme muscle is No.';
