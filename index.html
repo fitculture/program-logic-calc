@@ -608,7 +608,8 @@
     </div>
 
     <div class="fc-screen-title">6. Let's Set Your Goals!</div>
-    <span class="fc-help-text">Used to establish precise meal plans, macros, and daily calorie targets. Muscular and big-boned each count as one Yes. Extreme muscle moves the plan up one tier, capped at Plan E.</span>
+    <span class="fc-help-text">Muscular and Big-boned are separate answers, and both can be Yes. Each Yes is one column on the meal table. At 120 lb or under: No + No is Plan A, one Yes is Plan B, two Yes answers are Plan C. At 121–160 lb: B, C, D. At 161–200 lb: C, D, E. At 201 lb and above: D, E, E. Extreme muscle then moves that plan up one tier and stops at Plan E. Muscular lowers the body-fat estimate by 5 points, and Big-boned lowers it by 2. These answers do not change the program.</span>
+    <span class="fc-help-text">Ectomorph, Mesomorph, and Endomorph are not scored. The Master Logic does not define how those choices map to Muscular, Big-boned, or Extreme muscle.</span>
 
     <div class="fc-group fc-toggle-group">
       <label class="fc-label-title">Muscular</label>
@@ -668,6 +669,7 @@
       
       <h4 style="margin-top: 32px;">Nutritional Targets & Realism</h4>
       <div class="fc-result-item"><span>Assigned Meal Plan:</span> <strong id="res-meals"></strong></div>
+      <div class="fc-result-item"><span>Meal-plan reason:</span> <strong id="res-meal-reason"></strong></div>
       <div class="fc-result-item"><span>Protein Shakes:</span> <strong id="res-shakes"></strong></div>
       <div class="fc-result-item"><span>Rate of Weight Loss:</span> <strong id="res-rate"></strong></div>
       <div class="fc-result-item"><span>Required Daily Burn Goal:</span> <strong id="res-burn"></strong></div>
@@ -700,7 +702,7 @@
             <li>
               <strong>Plain Base & Maintenance</strong>
               Plain Base: one 15-min muscle video, then cardio classes until the daily burn goal is met. Maintenance: one 15-min muscle video, with cardio sized so burn matches intake.
-              <span class="fc-kb-subtext">0 protein shakes. Base loss goals above 2.0 lb per week are an unrealistic timeframe.</span>
+              <span class="fc-kb-subtext">0 protein shakes. Maintenance is a fixed program: the one-hour answer is saved and does not create a Base or Accelerated version. Base loss goals above 2.0 lb per week are an unrealistic timeframe.</span>
             </li>
             <li>
               <strong>Base (Menopause, GLP-1, Lose Wt + Gain Muscle)</strong>
@@ -881,14 +883,28 @@
       else if (lbs <= 200) row = ['C', 'D', 'E'];
       else row = ['D', 'E', 'E'];
       let code = row[Math.min(yesCount, 2)];
+      const beforeBump = code;
       if (frameExtreme === 'yes') {
         const order = ['A', 'B', 'C', 'D', 'E'];
         code = order[Math.min(order.indexOf(code) + 1, 4)];
       }
-      return planLabels[code];
+      const yesNames = [];
+      if (frameMuscular === 'yes') yesNames.push('Muscular');
+      if (frameBone === 'yes') yesNames.push('Big-boned');
+      const column = yesCount === 0 ? 'No + No' : yesCount === 1 ? 'One Yes' : 'Yes + Yes';
+      const who = yesCount === 0 ? 'Muscular No, Big-boned No' : yesNames.join(' and ') + ' Yes';
+      const bracket = lbs <= 120 ? '120 lb or under' : lbs <= 160 ? '121–160 lb' : lbs <= 200 ? '161–200 lb' : '201 lb and above';
+      let reason = column + ' (' + who + ') at ' + bracket + ' is Plan ' + beforeBump + '.';
+      if (frameExtreme === 'yes' && code !== beforeBump) reason += ' Extreme muscle moves it to Plan ' + code + '.';
+      else if (frameExtreme === 'yes') reason += ' Extreme muscle is already at Plan E, so it stays there.';
+      else reason += ' Extreme muscle is No.';
+      reason += ' This does not change the program.';
+      return { label: planLabels[code], reason: reason };
     }
 
-    const tierPlan = tierPlanFor(currentWt);
+    const tier = tierPlanFor(currentWt);
+    const tierPlan = tier.label;
+    const mealReason = tier.reason;
     const fixedMeal = 'Plan E (42/42) + 1 Extra Main Meal';
 
     function assignNamed(name) {
@@ -906,7 +922,7 @@
         shakes = '4 per day';
       } else if (name === 'maintenance') {
         program = 'Maintenance';
-        track = 'Base Structure (Net-Zero)';
+        track = 'Fixed program';
         cap = '15-min muscle plus cardio sized to net-zero. No shakes.';
         meals = tierPlan;
         shakes = '0 per day';
@@ -1061,6 +1077,9 @@
       dailyBurn = 'Net-zero. Cardio is sized to match intake.';
     }
 
+    if (program === 'Maintenance') {
+      realismNote += (realismNote ? '<br>' : '') + '<strong>Maintenance:</strong> The one-hour answer is saved. It does not change this program, and it does not create an Accelerated version.';
+    }
     if (menopause === 'yes' && sex === 'male' && !retreatOverride) {
       realismNote += (realismNote ? '<br>' : '') + '<strong>Menopause:</strong> This answer assigns a program for Female users only, so Male stays on the next matching program.';
     }
@@ -1072,7 +1091,11 @@
     document.getElementById('res-program').innerText = program;
     document.getElementById('res-track').innerText = track;
     document.getElementById('res-cap').innerText = cap;
+    const shownMealReason = meals === fixedMeal
+      ? 'Athlete and Muscle Building always use Plan E plus one extra meal. Muscular, Big-boned, and Extreme muscle do not change that meal plan or the program.'
+      : mealReason;
     document.getElementById('res-meals').innerText = meals;
+    document.getElementById('res-meal-reason').innerText = shownMealReason;
     document.getElementById('res-shakes').innerText = shakes;
     document.getElementById('res-rate').innerText = rateOfLossText;
     document.getElementById('res-burn').innerText = dailyBurn;
