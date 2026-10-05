@@ -608,25 +608,18 @@
     </div>
 
     <div class="fc-screen-title">6. Let's Set Your Goals!</div>
-    <span class="fc-help-text">Muscular and Big-boned are separate answers, and both can be Yes. Each Yes is one column on the meal table. At 120 lb or under: No + No is Plan A, one Yes is Plan B, two Yes answers are Plan C. At 121–160 lb: B, C, D. At 161–200 lb: C, D, E. At 201 lb and above: D, E, E. Extreme muscle then moves that plan up one tier and stops at Plan E. Muscular lowers the body-fat estimate by 5 points, and Big-boned lowers it by 2. These answers do not change the program.</span>
-    <span class="fc-help-text">Ectomorph, Mesomorph, and Endomorph are not scored. The Master Logic does not define how those choices map to Muscular, Big-boned, or Extreme muscle.</span>
+    <span class="fc-help-text">Body type is a proposed app rule, waiting for confirmation. It is not a Master Logic rule yet. Ectomorph sets Muscular No and Big-boned No. Mesomorph sets Muscular Yes and Big-boned No. Endomorph sets Muscular No and Big-boned Yes. Those two values go into the existing meal table. Gain Muscle is a separate goal and does not change Muscular. Extreme muscle stays its own question, and Ectomorph does not turn it on.</span>
+    <span class="fc-help-text">The meal table, the body-fat estimate, and the frame adjustment can use Muscular Yes and Big-boned Yes together. This single choice cannot represent that combination, so the Yes + Yes column cannot be selected. At 120 lb or under the selectable plans are A or B. At 121–160 lb: B or C. At 161–200 lb: C or D. At 201 lb and above: D or E. Extreme muscle can still move the selected plan up one tier, capped at Plan E.</span>
 
-    <div class="fc-group fc-toggle-group">
-      <label class="fc-label-title">Muscular</label>
-      <div class="fc-toggle-segmented">
-        <input type="radio" id="frame-muscular-no" name="frame-muscular" value="no" checked>
-        <label for="frame-muscular-no">No</label>
-        <input type="radio" id="frame-muscular-yes" name="frame-muscular" value="yes">
-        <label for="frame-muscular-yes">Yes</label>
-      </div>
-    </div>
-    <div class="fc-group fc-toggle-group">
-      <label class="fc-label-title">Big-boned</label>
-      <div class="fc-toggle-segmented">
-        <input type="radio" id="frame-bone-no" name="frame-bone" value="no" checked>
-        <label for="frame-bone-no">No</label>
-        <input type="radio" id="frame-bone-yes" name="frame-bone" value="yes">
-        <label for="frame-bone-yes">Yes</label>
+    <div class="fc-group">
+      <label class="fc-label-title">Body type</label>
+      <div class="fc-radio-stacked">
+        <input type="radio" id="body-ecto" name="body-type" value="ectomorph" checked>
+        <label for="body-ecto">Ectomorph – Lean Build</label>
+        <input type="radio" id="body-meso" name="body-type" value="mesomorph">
+        <label for="body-meso">Mesomorph – Athletic Build</label>
+        <input type="radio" id="body-endo" name="body-type" value="endomorph">
+        <label for="body-endo">Endomorph – Solid Build</label>
       </div>
     </div>
     <div class="fc-group fc-toggle-group">
@@ -838,8 +831,15 @@
 
     const sex = document.querySelector('input[name="sex"]:checked').value;
     const menopauseApplies = menopause === 'yes' && sex === 'female';
-    const frameMuscular = document.querySelector('input[name="frame-muscular"]:checked').value;
-    const frameBone = document.querySelector('input[name="frame-bone"]:checked').value;
+    const bodyType = document.querySelector('input[name="body-type"]:checked').value;
+    const bodyTypeMap = {
+      ectomorph: { muscular: 'no', bone: 'no', label: 'Ectomorph' },
+      mesomorph: { muscular: 'yes', bone: 'no', label: 'Mesomorph' },
+      endomorph: { muscular: 'no', bone: 'yes', label: 'Endomorph' }
+    };
+    const mappedBody = bodyTypeMap[bodyType];
+    const frameMuscular = mappedBody.muscular;
+    const frameBone = mappedBody.bone;
     const frameExtreme = document.querySelector('input[name="frame-extreme"]:checked').value;
     const retreat = document.querySelector('input[name="retreat"]:checked').value;
     const retreatClose = document.querySelector('input[name="retreat-close"]:checked').value;
@@ -888,13 +888,10 @@
         const order = ['A', 'B', 'C', 'D', 'E'];
         code = order[Math.min(order.indexOf(code) + 1, 4)];
       }
-      const yesNames = [];
-      if (frameMuscular === 'yes') yesNames.push('Muscular');
-      if (frameBone === 'yes') yesNames.push('Big-boned');
       const column = yesCount === 0 ? 'No + No' : yesCount === 1 ? 'One Yes' : 'Yes + Yes';
-      const who = yesCount === 0 ? 'Muscular No, Big-boned No' : yesNames.join(' and ') + ' Yes';
       const bracket = lbs <= 120 ? '120 lb or under' : lbs <= 160 ? '121–160 lb' : lbs <= 200 ? '161–200 lb' : '201 lb and above';
-      let reason = column + ' (' + who + ') at ' + bracket + ' is Plan ' + beforeBump + '.';
+      let reason = 'Proposed mapping, not Master Logic yet: ' + mappedBody.label + ' sets Muscular ' + (frameMuscular === 'yes' ? 'Yes' : 'No') + ' and Big-boned ' + (frameBone === 'yes' ? 'Yes' : 'No') + '. ';
+      reason += column + ' at ' + bracket + ' is Plan ' + beforeBump + '.';
       if (frameExtreme === 'yes' && code !== beforeBump) reason += ' Extreme muscle moves it to Plan ' + code + '.';
       else if (frameExtreme === 'yes') reason += ' Extreme muscle is already at Plan E, so it stays there.';
       else reason += ' Extreme muscle is No.';
