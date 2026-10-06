@@ -618,7 +618,10 @@
         <label for="body-meso">Mesomorph – Athletic Build</label>
         <input type="radio" id="body-endo" name="body-type" value="endomorph">
         <label for="body-endo">Endomorph – Solid Build</label>
+        <input type="radio" id="body-legacy" name="body-type" value="legacy">
+        <label for="body-legacy">Older saved profile: Muscular Yes + Big Boned Yes</label>
       </div>
+      <span class="fc-help-text">Not selectable in the app. Kept so older saved profiles still calculate.</span>
     </div>
     <div class="fc-group fc-toggle-group">
       <label class="fc-label-title">Extreme muscle / lean mass</label>
@@ -660,7 +663,7 @@
       
       <h4 style="margin-top: 32px;">Nutritional Targets & Realism</h4>
       <div class="fc-result-item"><span>Assigned Meal Plan:</span> <strong id="res-meals"></strong></div>
-      <div class="fc-result-item"><span>Meal-plan reason:</span> <strong id="res-meal-reason"></strong></div>
+      <div class="fc-result-item"><span>How Plan Was Set:</span> <strong id="res-meal-reason"></strong></div>
       <div class="fc-result-item"><span>Protein Shakes:</span> <strong id="res-shakes"></strong></div>
       <div class="fc-result-item"><span>Rate of Weight Loss:</span> <strong id="res-rate"></strong></div>
       <div class="fc-result-item"><span>Required Daily Burn Goal:</span> <strong id="res-burn"></strong></div>
@@ -833,7 +836,8 @@
     const bodyTypeMap = {
       ectomorph: { muscular: 'no', bone: 'no', label: 'Ectomorph' },
       mesomorph: { muscular: 'yes', bone: 'no', label: 'Mesomorph' },
-      endomorph: { muscular: 'no', bone: 'yes', label: 'Endomorph' }
+      endomorph: { muscular: 'no', bone: 'yes', label: 'Endomorph' },
+      legacy: { muscular: 'yes', bone: 'yes', label: 'An older saved profile (Muscular Yes + Big Boned Yes)' }
     };
     const mappedBody = bodyTypeMap[bodyType];
     const frameMuscular = mappedBody.muscular;
@@ -886,10 +890,10 @@
         const order = ['A', 'B', 'C', 'D', 'E'];
         code = order[Math.min(order.indexOf(code) + 1, 4)];
       }
-      const column = yesCount === 0 ? 'No + No' : yesCount === 1 ? 'One Yes' : 'Yes + Yes';
+      const column = yesCount === 0 ? 'No + No' : yesCount === 1 ? 'Any One = Yes' : 'Yes + Yes';
       const bracket = lbs <= 120 ? '120 lb or under' : lbs <= 160 ? '121–160 lb' : lbs <= 200 ? '161–200 lb' : '201 lb and above';
       const fatNote = frameMuscular === 'yes' ? ' Body fat uses the Muscular adjustment, minus 5 points.' : frameBone === 'yes' ? ' Body fat uses the Big-boned adjustment, minus 2 points.' : ' Body fat uses neither adjustment.';
-      let reason = 'Proposed mapping, not confirmed in the Master Logic. ' + mappedBody.label + ' is ' + column + '. At ' + bracket + ' that is Plan ' + beforeBump + '.' + fatNote;
+      let reason = mappedBody.label + ' is ' + column + '. At ' + bracket + ' that is Plan ' + beforeBump + '.' + fatNote;
       if (frameExtreme === 'yes' && code !== beforeBump) reason += ' Extreme muscle moves it to Plan ' + code + '.';
       else if (frameExtreme === 'yes') reason += ' Extreme muscle is already at Plan E, so it stays there.';
       else reason += ' Extreme muscle is No.';
